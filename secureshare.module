@@ -11,8 +11,8 @@
  */
 function secureshare_menu() {
 	$items['admin/config/secureshare'] = array(
-    'title' => 'Sharebuttons',
-    'description' => 'Configure secure Sharebuttons',
+    'title' => 'Secure Sharebuttons',
+    'description' => 'Configure general Settings',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('administer secureshare'),
     'position' => 'right',
@@ -22,8 +22,8 @@ function secureshare_menu() {
     'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/config/secureshare/general'] = array(
-    'title' => 'Secure Sharebuttons',
-    'description' => 'Configure secure Sharebuttons',
+    'title' => 'General Settings',
+    'description' => 'Configure general Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('secureshare_admin_settings'),
     'access arguments' => array('administer secureshare'),
