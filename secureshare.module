@@ -10,7 +10,18 @@
  * Implements of hook_menu().
  */
 function secureshare_menu() {
-  $items['admin/config/secureshare'] = array(
+	$items['admin/config/secureshare'] = array(
+    'title' => 'Sharebuttons',
+    'description' => 'Configure secure Sharebuttons',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer secureshare'),
+    'position' => 'right',
+    'weight' => -20,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/secureshare/general'] = array(
     'title' => 'Secure Sharebuttons',
     'description' => 'Configure secure Sharebuttons',
     'page callback' => 'drupal_get_form',
