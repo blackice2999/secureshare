@@ -92,7 +92,7 @@ function secureshare_node_view($node, $view_mode) {
   $types = variable_get('secureshare_node_types', array());
   $showonteasers = variable_get('secureshare_showonteasers', 0);
   $full = ($view_mode == 'full') ? TRUE : FALSE;
-  $show = ( ! empty($types[$node->type]) && user_access('access fblikebutton'));
+  $show = ( ! empty($types[$node->type]) && user_access('access secureshare'));
   // Thanks to corbacho for supplying the code for the $webpage_to_like variable...
   // (It was apparently throwing errors/notices the way I had it set up.)
   $webpage_to_like = url("node/$node->nid", array('absolute' => TRUE));
@@ -130,5 +130,23 @@ function secureshare_node_view($node, $view_mode) {
       }
     }
   }
+}
+
+function _secureshare_field($webpage_to_like, $conf) {
+  $webpage_to_like = urlencode($webpage_to_like);
+  $width = $conf['width'];
+  $height = $conf['height'];
+  $layout = $conf['layout'];
+  $action = $conf['action'];
+  $colorscheme = $conf['color_scheme'];
+  $show_faces = $conf['show_faces'];
+  $font = $conf['font'];
+//  $send = $conf['send'];
+  $other_css = $conf['other_css'];
+  $language = $conf['language'];
+  $params = "href={$webpage_to_like}&layout={$layout}&show_faces={$show_faces}&width={$width}px&font={$font}&height={$height}px&action={$action}&colorscheme={$colorscheme}&locale={$language}";
+  $src = htmlentities($params);
+  $output = '<iframe src="https://www.facebook.com/plugins/like.php?' . $src . '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: ' . $width . 'px; height: ' . $height . 'px;' . $other_css . '" allowTransparency="true"></iframe>';
+  return $output;
 }
 
