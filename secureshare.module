@@ -11,7 +11,7 @@
  */
 function secureshare_menu() {
 	$items['admin/config/secureshare'] = array(
-    'title' => 'Secure Sharebuttons',
+    'title' => 'Secure share',
     'description' => 'Configure general Settings',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('administer secureshare'),
@@ -22,7 +22,7 @@ function secureshare_menu() {
     'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/config/secureshare/general'] = array(
-    'title' => 'General Settings',
+    'title' => 'General',
     'description' => 'Configure general settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('secureshare_admin_settings'),
@@ -32,7 +32,7 @@ function secureshare_menu() {
     'weight' => 0,
   );
 	$items['admin/config/secureshare/facebook'] = array(
-    'title' => 'Facebook Settings',
+    'title' => 'Facebook',
     'description' => 'Configure facebook settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('secureshare_admin_settings'),
@@ -42,7 +42,7 @@ function secureshare_menu() {
     'weight' => 1,
   );
 	$items['admin/config/secureshare/googleplus'] = array(
-    'title' => 'Google+ Settings',
+    'title' => 'Google+',
     'description' => 'Configure Google+ settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('secureshare_admin_settings'),
@@ -52,7 +52,7 @@ function secureshare_menu() {
     'weight' => 2,
   );
 	$items['admin/config/secureshare/twitter'] = array(
-    'title' => 'Twitter Settings',
+    'title' => 'Twitter',
     'description' => 'Configure twitter settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('secureshare_admin_settings'),
