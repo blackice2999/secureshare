@@ -25,5 +25,11 @@ function secureshare_admin_settings() {
     '#default_value' => variable_get('secureshare_showonteasers', 0),
     '#description' => t('If <em>Yes</em> is selected, the button will appear even when the node being viewed is a teaser. Otherwise it will only appear when the full node is being viewed.'),
   );
+  $form['secureshare_language'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Language'),
+    '#default_value' => variable_get('secureshare_language', 'en_US'),
+    '#description' => t('Specific language to use. Default is English. Examples:<br/>French (France): <em>fr_FR</em><br/>French (Canada): <em>fr_CA</em>'),
+  );
   return system_settings_form($form);
 }

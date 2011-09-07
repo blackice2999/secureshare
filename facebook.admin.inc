@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Admin functions for secureshare.
+ * Admin functions for secureshare facebookbutton.
  */
 
 
@@ -84,11 +84,5 @@ function secureshare_admin_settings() {
     '#default_value' => variable_get('secureshare_weight', '50'),
     '#description' => t('The weight determines where on a node the like button will appear. The larger the weight, the lower it will appear on the node. For example, if you want the button to appear more toward the top of the node, choose <em>-40</em> as opposed to <em>-39, -38, 0, 1,</em> or <em>50,</em> etc.'),
     );
-  $form['secureshare_language'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Language'),
-    '#default_value' => variable_get('secureshare_language', 'en_US'),
-    '#description' => t('Specific language to use. Default is English. Examples:<br/>French (France): <em>fr_FR</em><br/>French (Canada): <em>fr_CA</em>'),
-  );
   return system_settings_form($form);
 }
