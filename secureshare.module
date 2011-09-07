@@ -16,6 +16,7 @@ function secureshare_init() {
 
 
 
+
 /**
  * Implements of hook_menu().
  */
@@ -156,7 +157,7 @@ function _secureshare_field($webpage_to_like, $conf) {
   $language = $conf['language'];
   $params = "href={$webpage_to_like}&layout={$layout}&show_faces={$show_faces}&width={$width}px&font={$font}&height={$height}px&action={$action}&colorscheme={$colorscheme}&locale={$language}";
   $src = htmlentities($params);
-  $output = '<div class="secureshare"><iframe src="https://www.facebook.com/plugins/like.php?' . $src . '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: ' . $width . 'px; height: ' . $height . 'px;' . $other_css . '" allowTransparency="true"></iframe></div>';
+  $output = '<div id="socialshareprivacy"><iframe src="https://www.facebook.com/plugins/like.php?' . $src . '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: ' . $width . 'px; height: ' . $height . 'px;' . $other_css . '" allowTransparency="true"></iframe></div>';
   return $output;
 }
 

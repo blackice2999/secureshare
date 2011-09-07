@@ -330,7 +330,7 @@
 })(jQuery);
 
 jQuery(document).ready(function($){
-      if($('#socialshareprivacy')){
-        $('#socialshareprivacy').socialSharePrivacy();
-      }
-    });
+    if($('#socialshareprivacy')){
+      $('#socialshareprivacy').socialSharePrivacy();
+    }
+});
