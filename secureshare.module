@@ -12,6 +12,7 @@
 function secureshare_init() {
   global $conf;
     drupal_add_js(drupal_get_path('module', 'secureshare') .'/js/jquery.socialshareprivacy.js');
+	drupal_add_js(array('secureshare' => array('module' => drupal_get_path('module', 'secureshare'))), 'setting');
 }
 
 
@@ -157,7 +158,7 @@ function _secureshare_field($webpage_to_like, $conf) {
   $language = $conf['language'];
   $params = "href={$webpage_to_like}&layout={$layout}&show_faces={$show_faces}&width={$width}px&font={$font}&height={$height}px&action={$action}&colorscheme={$colorscheme}&locale={$language}";
   $src = htmlentities($params);
-  $output = '<div id="socialshareprivacy"><iframe src="https://www.facebook.com/plugins/like.php?' . $src . '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: ' . $width . 'px; height: ' . $height . 'px;' . $other_css . '" allowTransparency="true"></iframe></div>';
+  $output = '<div id="socialshareprivacy"></div>';
   return $output;
 }
 

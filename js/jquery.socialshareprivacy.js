@@ -12,13 +12,16 @@
  * Spread the word, link to us if you can.
  */
 (function($){
+	$(document).ready(function() {
+	alert(Drupal.settings.secureshare['module']);
+});
     $.fn.socialSharePrivacy = function(options){
         var defaults = {
             'services' : {
                 'facebook' : {
                     'status'            : 'on',
                     'app_id'            : '__FB_APP-ID__',
-                    'dummy_img'         : 'images/dummy_facebook.png',
+                    'dummy_img'         : Drupal.settings.secureshare['module']+ '/images/dummy_facebook.png',
                     'txt_info'          : '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung an Facebook senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.',
                     'txt_fb_off'        : 'nicht mit Facebook verbunden',
                     'txt_fb_on'         : 'mit Facebook verbunden',
@@ -26,21 +29,21 @@
                     'display_name'      : 'Facebook',
                     'referrer_track'    : '',
                     'language'          : 'de_DE'
-                }, 
+                },
                 'twitter' : {
-                    'status'            : 'on', 
-                    'dummy_img'         : 'images/dummy_twitter.png',
+                    'status'            : 'on',
+                    'dummy_img'         : Drupal.settings.secureshare['module']+ '/images/dummy_twitter.png',
                     'txt_info'          : '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung an Twitter senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.',
                     'txt_twitter_off'   : 'nicht mit Twitter verbunden',
                     'txt_twitter_on'    : 'mit Twitter verbunden',
                     'perma_option'      : 'on',
                     'display_name'      : 'Twitter',
-                    'referrer_track'    : '', 
+                    'referrer_track'    : '',
                     'tweet_text'        : getTweetText
                 },
                 'gplus' : {
                     'status'            : 'on',
-                    'dummy_img'         : 'images/dummy_gplus.png',
+                    'dummy_img'         : Drupal.settings.secureshare['module']+ '/images/dummy_gplus.png',
                     'txt_info'          : '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung an Google+ senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.',
                     'txt_gplus_off'     : 'nicht mit Google+ verbunden',
                     'txt_plus_on'       : 'mit Google+ verbunden',
@@ -56,7 +59,6 @@
             'cookie_path'       : '/',
             'cookie_domain'     : document.location.host,
             'cookie_expires'    : '365',
-            'css_path'          : 'scss/secureshare.css'
         };
 
         // Standardwerte des Plug-Ings mit den vom User angegebenen Optionen ueberschreiben
@@ -96,7 +98,7 @@
             var metaContent = jQuery('meta[name="' + name + '"]').attr('content');
             return metaContent ? metaContent : '';
         }
-        
+
         // Tweet-Text
         function getTweetText(){
             // Titel aus <meta name="DC.title"> und <meta name="DC.creator"> wenn vorhanden, sonst <title>
@@ -155,16 +157,16 @@
                     text = text();
                 }
                 text = abbreviateText(text,'120');
-                
+
                 var twitter_enc_uri = encodeURIComponent(uri+options.services.twitter.referrer_track);
                 var twitter_count_url = encodeURIComponent(uri);
                 var twitter_code = '<iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.html?url='+twitter_enc_uri+'&amp;counturl='+twitter_count_url+'&amp;text='+text+'&amp;count=horizontal"></iframe>';
                 var twitter_dummy_btn = '<img src="'+options.services.twitter.dummy_img+'" alt="&quot;Tweet this&quot;-Dummy" class="tweet_this_dummy" />';
-                
+
                 context.append('<li class="twitter help_info"><span class="info">'+options.services.twitter.txt_info+'</span><span class="switch off">'+options.services.twitter.txt_twitter_off+'</span><div class="tweet dummy_btn">'+twitter_dummy_btn+'</div></li>');
 
                 var $container_tw = $('li.twitter', context);
-                
+
                 $('li.twitter div.tweet img,li.twitter span.switch', context).live('click', function(){
                     if($container_tw.find('span.switch').hasClass('off')){
                         $container_tw.addClass('info_off');
@@ -285,7 +287,7 @@
                 $($container_settings_info.find('span.settings'), context).live('mouseenter', function(){
                     var timeout_id = window.setTimeout(function(){ $container_settings_info.find('.settings_info_menu').removeClass('off').addClass('on'); }, 500);
                     $(this).data('timeout_id',timeout_id);
-                }); 
+                });
                 $($container_settings_info, context).live('mouseleave', function(){
                     var timeout_id = $(this).data('timeout_id');
                     window.clearTimeout(timeout_id);

@@ -5,3 +5,5 @@ core = 7.x
 configure = admin/config/secureshare
 package = "Secure Sharebuttons"
 
+stylesheets[all][] = css/secureshare.css
+
