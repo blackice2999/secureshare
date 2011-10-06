@@ -41,36 +41,7 @@ function secureshare_menu() {
     'file' => 'secureshare.admin.inc',
     'weight' => 0,
   );
-	$items['admin/config/secureshare/facebook'] = array(
-    'title' => 'Facebook',
-    'description' => 'Configure facebook settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('secureshare_admin_settings'),
-    'access arguments' => array('administer secureshare'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'facebook.admin.inc',
-    'weight' => 1,
-  );
-	$items['admin/config/secureshare/googleplus'] = array(
-    'title' => 'Google+',
-    'description' => 'Configure Google+ settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('secureshare_admin_settings'),
-    'access arguments' => array('administer secureshare'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'googleplus.admin.inc',
-    'weight' => 2,
-  );
-	$items['admin/config/secureshare/twitter'] = array(
-    'title' => 'Twitter',
-    'description' => 'Configure twitter settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('secureshare_admin_settings'),
-    'access arguments' => array('administer secureshare'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'twitter.admin.inc',
-    'weight' => 3,
-  );
+	
   return $items;
 }
 
