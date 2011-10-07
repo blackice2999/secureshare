@@ -29,12 +29,7 @@ function secureshare_admin_settings()
 	$form['secureshare_services'] = array(
 		'#type' => 'checkboxes',
 		'#title' => t('Enabled services'),
-		'#default_value' => variable_get('secureshare_services', array('facebookset', 'twitterset', 'gplusset')),
-		'#options' => array(
-			'facebookset' => 'Facebook',
-			'twitterset' => 'Twitter',
-			'gplusset' => 'Google Plus',
-		),
+		'#description' => t('Not implemented yet.'),
 	);
 	$form['secureshare_appid'] = array(
 		'#type' => 'textfield',
@@ -42,28 +37,14 @@ function secureshare_admin_settings()
 		'#default_value' => variable_get('secureshare_appid', '234037923313454'),
 		'#description' => t('Set the Facebook Application-ID'),
 	);
-	$form['secureshare_showtwitter'] = array(
-		'#type' => 'select',
-		'#title' => t('Using twitter?'),
-		'#options' => array(('on'), ('off')),
-		'#default_value' => variable_get('secureshare_showtwitter', 'off'),
-		'#description' => t('Using twitter'),
-	);
 
 	$form['secureshare_hovertext'] = array(
 		'#type' => 'textarea',
-		'#title' => t('Text show on hover'),
+		'#title' => t('Text to show on hover'),
 		'#default_value' => variable_get('secureshare_hovertext', '234037923313454'),
 		'#description' => t('Specific text that will show when hover an service'),
 	);
-	/**
-	 *	$form['secureshare_language'] = array(
-	'#type' => 'textfield',
-	'#title' => t('Language'),
-	'#default_value' => variable_get('secureshare_language', 'en_US'),
-	'#description' => t('Specific language to use. Default is English. Examples:<br/>French (France): <em>fr_FR</em><br/>French (Canada): <em>fr_CA</em>'),
-	);
-	 **/
+	
 	return system_settings_form($form);
 
 }
