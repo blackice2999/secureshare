@@ -144,7 +144,8 @@
     left: 0; 
     position: absolute; 
     top: 0; 
-    width: 135px; 
+    width: 135px;
+	min-height: 200px;
     z-index: 1000; 
 }
 .social_share_privacy_area li.settings_info .settings_info_menu.off {
@@ -178,8 +179,7 @@
     padding: 0 10px 10px; 
 }
 .social_share_privacy_area li.settings_info .settings_info_menu form fieldset legend {
-    font-size: 11px; 
-    font-weight: bold; 
+    font-size: 11px;  
     line-height: 14px; 
     margin: 0; 
     padding: 10px 0; 
@@ -205,5 +205,9 @@
 }
 /* Settings/Info end */
 #mitte #mitte_links {
+	overflow: visible !important;
+}
+
+#socialshareprivacy {
 	overflow: visible !important;
 }
