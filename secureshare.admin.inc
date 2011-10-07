@@ -34,7 +34,7 @@ function secureshare_admin_settings()
 	$form['secureshare_appid'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Facebook Application-ID'),
-		'#default_value' => variable_get('secureshare_appid', '234037923313454'),
+		'#default_value' => variable_get('secureshare_appid', 'please generate an App-ID under http://developers.facebook.com/setup/'),
 		'#description' => t('Set the Facebook Application-ID'),
 	);
 
