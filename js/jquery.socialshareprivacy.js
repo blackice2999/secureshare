@@ -222,7 +222,8 @@
 
             // Menue zum dauerhaften Einblenden der aktiven Dienste via Cookie einbinden
             // Die IE7 wird hier ausgenommen, da er kein JSON kann und die Cookies hier ueber JSON-Struktur abgebildet werden
-            if(((options.services.facebook.status == 'on' && options.services.facebook.perma_option == 'on' && options.services.facebook.app_id != '__FB_APP-ID__') || (options.services.twitter.status == 'on' && options.services.twitter.perma_option == 'on') || (options.services.gplus.status == 'on' && options.services.gplus.perma_option == 'on')) && (($.browser.msie && $.browser.version > 7.0) || !$.browser.msie)){
+          /**
+					if(((options.services.facebook.status == 'on' && options.services.facebook.perma_option == 'on' && options.services.facebook.app_id != '__FB_APP-ID__') || (options.services.twitter.status == 'on' && options.services.twitter.perma_option == 'on') || (options.services.gplus.status == 'on' && options.services.gplus.perma_option == 'on')) && (($.browser.msie && $.browser.version > 7.0) || !$.browser.msie)){
                 // Cookies abrufen
                 var cookie_list = document.cookie.split(';');
                 var cookies = '{';
@@ -324,6 +325,7 @@
                     $('li.gplus span.switch', context).click();
                 }
             }
+					 **/
         });
     }
 })(jQuery);
