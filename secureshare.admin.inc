@@ -22,9 +22,9 @@ function secureshare_admin_settings()
 	$form['secureshare_showonteasers'] = array(
 		'#type' => 'radios',
 		'#title' => t('Display on teasers?'),
-		'#options' => array(t('No'), t('Yes')),
+		'#options' => array(t('No')), //only No, because javascript not working with more than one teaser on one site, , t('Yes')
 		'#default_value' => variable_get('secureshare_showonteasers', 0),
-		'#description' => t('If <em>Yes</em> is selected, the button will appear even when the node being viewed is a teaser. Otherwise it will only appear when the full node is being viewed.'),
+		'#description' => t('Only no, because javascript not working with more than one teaser on one site at the moment.'),
 	);
 	$form['secureshare_services'] = array(
 		'#type' => 'checkboxes',
@@ -41,7 +41,7 @@ function secureshare_admin_settings()
 	$form['secureshare_hovertext'] = array(
 		'#type' => 'textarea',
 		'#title' => t('Text to show on hover'),
-		'#default_value' => variable_get('secureshare_hovertext', '234037923313454'),
+		'#default_value' => variable_get('secureshare_hovertext', '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.'),
 		'#description' => t('Specific text that will show when hover an service'),
 	);
 	
