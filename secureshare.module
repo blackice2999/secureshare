@@ -6,12 +6,22 @@
  * Adds Sharebuttons from Facebook, Google+ and Twitter to each selected node type and make it active after confirm from user.
  */
 
+
 /**
  * Implements of hook_init
  */
 function secureshare_init() {
-    drupal_add_js(drupal_get_path('module', 'secureshare') .'/js/jquery.socialshareprivacy.js');
-		drupal_add_js(array('secureshare' => array('module' => drupal_get_path('module', 'secureshare'))), 'setting');
+
+
+  drupal_add_js(drupal_get_path('module', 'secureshare') .'/js/jquery.socialshareprivacy.js');
+	drupal_add_js(array('secureshare' => array('module' => drupal_get_path('module', 'secureshare'))), 'setting');
+	drupal_add_js(array('secureshareconf' => array(
+    'shover' => variable_get('secureshare_hovertext', 'Testtext'),
+		'usetwitter' => variable_get('secureshare_showtwitter', '1'),
+		'appid' => variable_get('secureshare_appid', '234037923313454'),
+  )
+	),
+	'setting');
 }
 
 

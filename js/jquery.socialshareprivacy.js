@@ -16,10 +16,10 @@
         var defaults = {
             'services' : {
                 'facebook' : {
-                    'status'            : 'off',
-                    'app_id'            : '__FB_APP-ID__',
+                    'status'            : 'on',
+                    'app_id'            : ''+Drupal.settings.secureshareconf['appid']+ '',
                     'dummy_img'         : '../'+Drupal.settings.secureshare['module']+ '/images/dummy_facebook.png',
-                    'txt_info'          : '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung an Facebook senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.',
+                    'txt_info'          : ''+Drupal.settings.secureshareconf['shover']+ '',
                     'txt_fb_off'        : 'nicht mit Facebook verbunden',
                     'txt_fb_on'         : 'mit Facebook verbunden',
                     'perma_option'      : 'on',
@@ -28,9 +28,9 @@
                     'language'          : 'de_DE'
                 },
                 'twitter' : {
-                    'status'            : 'on',
+                    'status'            : '1',
                     'dummy_img'         : '../'+Drupal.settings.secureshare['module']+ '/images/dummy_twitter.png',
-                    'txt_info'          : '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung an Twitter senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.',
+                    'txt_info'          : ''+Drupal.settings.secureshareconf['shover']+ '',
                     'txt_twitter_off'   : 'nicht mit Twitter verbunden',
                     'txt_twitter_on'    : 'mit Twitter verbunden',
                     'perma_option'      : 'on',
@@ -41,7 +41,7 @@
                 'gplus' : {
                     'status'            : 'on',
                     'dummy_img'         : '../'+Drupal.settings.secureshare['module']+ '/images/dummy_gplus.png',
-                    'txt_info'          : '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung an Google+ senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.',
+                    'txt_info'          : ''+Drupal.settings.secureshareconf['shover']+ '',
                     'txt_gplus_off'     : 'nicht mit Google+ verbunden',
                     'txt_plus_on'       : 'mit Google+ verbunden',
                     'perma_option'      : 'on',
@@ -61,7 +61,7 @@
         // Standardwerte des Plug-Ings mit den vom User angegebenen Optionen ueberschreiben
         var options = $.extend(true, defaults, options);
 
-        if((options.services.facebook.status == 'on' && options.services.facebook.app_id != '__FB_APP-ID__') || options.services.twitter.status == 'on' || options.services.gplusone.status == 'on'){
+        if((options.services.facebook.status == 'on' && options.services.facebook.app_id != '__FB_APP-ID__') || options.services.twitter.status == '1' || options.services.gplusone.status == 'on'){
             $('head').append('<link rel="stylesheet" type="text/css" href="'+options.css_path+'" />');
             $(this).prepend('<ul class="social_share_privacy_area"></ul>');
             var context = $('.social_share_privacy_area', this);
@@ -147,7 +147,7 @@
             }
 
             // Twitter
-            if(options.services.twitter.status == 'on'){
+            if(options.services.twitter.status == '1'){
                 // 120 = Restzeichen-Anzahl nach automatischem URL-Kuerzen durch Twitter mit t.co
                 var text = options.services.twitter.tweet_text;
                 if(typeof(text) == 'function'){
