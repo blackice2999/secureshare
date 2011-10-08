@@ -1,9 +1,9 @@
 ; $Id$
 name = Secure Sharebuttons
 description = Displays Sharebuttons only after confirm from user
-core = 7.x
+core = 6.x
 configure = admin/config/secureshare
 package = "Secure Sharebuttons"
 
-stylesheets[all][] = css/secureshare.css
+
 

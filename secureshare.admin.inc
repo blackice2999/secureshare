@@ -11,7 +11,7 @@
  */
 function secureshare_admin_settings()
 {
-	$secureshare_node_options = node_type_get_names();
+	$secureshare_node_options = node_get_types('names');
 	$form['secureshare_node_types'] = array(
 		'#type' => 'checkboxes',
 		'#title' => t('Display SecureShare on these content types:'),
@@ -34,7 +34,7 @@ function secureshare_admin_settings()
 	$form['secureshare_appid'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Facebook Application-ID'),
-		'#default_value' => variable_get('secureshare_appid', '234037923313454'),
+		'#default_value' => variable_get('secureshare_appid', '0'),
 		'#description' => t('Set the Facebook Application-ID'),
 	);
 
@@ -44,7 +44,7 @@ function secureshare_admin_settings()
 		'#default_value' => variable_get('secureshare_hovertext', '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.'),
 		'#description' => t('Specific text that will show when hover an service'),
 	);
-	
+
 	return system_settings_form($form);
 
 }
