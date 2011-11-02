@@ -29,9 +29,9 @@ function secureshare_admin_settings() {
   $form['secureshare_showonteasers'] = array(
     '#type' => 'radios',
     '#title' => t('Display on teasers?'),
-    '#options' => array(t('No')), //only No, because javascript not working with more than one teaser on one site, , t('Yes')
+    '#options' => array(t('No'), t('Yes')),
     '#default_value' => variable_get('secureshare_showonteasers', 0),
-    '#description' => t('Only no, because javascript not working with more than one teaser on one site at the moment.'),
+    '#description' => t('Show Sharebuttons also on teaser?'),
   );
 
   // service specific settings
@@ -45,40 +45,32 @@ function secureshare_admin_settings() {
     // we have some default values for all services, we use it here to prevent duplicate code...
     $form['secureshare_' . $service_short][$service_short . '_status'] = array(
       '#type' => 'select',
-      '#title' => t($service_long . ' TXT Info'),
+      '#title' => t($service_long . ' active'),
       '#default_value' => variable_get($service_short . '_status', 'on'),
       '#options' => array('on' => t('on'), 'off' => t('off'))
     );
 
-
-    // we have some default values for all services, we use it here to prevent duplicate code...
     $form['secureshare_' . $service_short][$service_short . '_txt_info'] = array(
       '#type' => 'textfield',
-      '#title' => t($service_long . ' TXT Info'),
+      '#title' => t($service_long . ' Info hover'),
       '#default_value' => variable_get($service_short . '_txt_info', NULL),
     );
-
+/*
     $form['secureshare_' . $service_short][$service_short . '_txt_off'] = array(
       '#type' => 'textfield',
-      '#title' => t($service_long . ' TXT Info'),
+      '#title' => t($service_long . ' Info off'),
       '#default_value' => variable_get('secureshare_service_' . $service_short . '_txt_info', NULL),
     );
 
     $form['secureshare_' . $service_short][$service_short . '_txt_on'] = array(
       '#type' => 'textfield',
-      '#title' => t($service_long . ' TXT Info'),
+      '#title' => t($service_long . ' Info on'),
       '#default_value' => variable_get('secureshare_service_' . $service_short . '_txt_info', NULL),
     );
-
+*/
 
   }
 
-  $form['secureshare_services'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Enabled services'),
-    '#description' => t('Not implemented yet.'),
-    '#options' => $option_list,
-  );
 
   return system_settings_form($form);
 

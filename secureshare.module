@@ -23,21 +23,21 @@ function _secureshare_add_config() {
   $secureshareconfig['settings_perma'] = t('Settings Perma Ueberschrift');
   $secureshareconfig['services'] = array(
     'facebook' => array(
-      'status' => 'on',
+      'status' => variable_get('fb_status', 'on'),
       'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_facebook.png',
-      'txt_info' => t('FB INFO TEXT HERE'),
+      'txt_info' => t(variable_get('fb_txt_info','FB INFO TEXT HERE')),
       'txt_fb_off' => t('Off'),
       'txt_fb_on' => t('On'),
       'perma_option' => 'on',
       'display_name' => t('Facebook'),
       'referrer_track' => '',
       'language' => 'de_DE',
-      'action' => t('rcecommend'),
+      'action' => t('recommend'),
     ),
     'twitter' => array(
-      'status' => 'on',
+      'status' => variable_get('twitter_status', 'on'),
       'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_twitter.png',
-      'txt_info' => t('Twitter INFO TEXT HERE'),
+      'txt_info' => t(variable_get('twitter_txt_info','Twitter INFO TEXT HERE')),
       'txt_twitter_off' => t('Off'),
       'txt_twitter_on' => t('On'),
       'perma_option' => 'on',
@@ -47,9 +47,9 @@ function _secureshare_add_config() {
       'tweet_text' => t('tweet text'),
     ),
     'gplus' => array(
-      'status' => 'on',
+      'status' => variable_get('gplus_status', 'on'),
       'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_gplus.png',
-      'txt_info' => t(variable_get('secureshare_gplus_txt_info', 'Standarttext fuer Gplus...')),
+      'txt_info' => t(variable_get('gplus_txt_info', 'Standarttext fuer Gplus...')),
       'txt_twitter_off' => t('Off'),
       'txt_twitter_on' => t('On'),
       'perma_option' => 'on',
