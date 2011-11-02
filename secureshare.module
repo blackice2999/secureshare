@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file
@@ -11,38 +10,21 @@
  * Implements of hook_init
  */
 function secureshare_init() {
-    // add own javascript wrapper
-    _secureshare_add_js();
-
-	//drupal_add_css(drupal_get_path('module', 'secureshare') . '/css/secureshare.css');
-	//drupal_add_js(drupal_get_path('module', 'secureshare') . '/js/jquery.socialshareprivacy.js');
-	//drupal_add_js(array('secureshare' => array('module' => drupal_get_path('module', 'secureshare'))), 'setting');
-	//drupal_add_js(array('secureshareconf' => array(
-	//	 'shover' => variable_get('secureshare_hovertext', 'Testtext'),
-	//	 'appid' => variable_get('secureshare_appid', '234037923313454'),
-	// )
-	//							),
-	//							'setting');
+  // add own javascript wrapper
+  _secureshare_add_js();
 }
 
 function _secureshare_add_config() {
-  global $language;
-  //dpm(language_list());
-
   $secursharelib = libraries_get_path('socialshareprivacy');
-
   $secureshareconfig = array();
-
   $services = array('facebook', 'twitter', 'gplus');
-
   $secureshareconfig['txt_help'] = t('TXT Help Text');
   $secureshareconfig['info_link'] = 'http://example.com';
   $secureshareconfig['settings_perma'] = t('Settings Perma Ueberschrift');
-
   $secureshareconfig['services'] = array(
     'facebook' => array(
       'status' => 'on',
-      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_facebook.png', //TODO Add path to image here
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_facebook.png',
       'txt_info' => t('FB INFO TEXT HERE'),
       'txt_fb_off' => t('Off'),
       'txt_fb_on' => t('On'),
@@ -54,7 +36,7 @@ function _secureshare_add_config() {
     ),
     'twitter' => array(
       'status' => 'on',
-      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_twitter.png', //TODO Add path to image here
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_twitter.png',
       'txt_info' => t('Twitter INFO TEXT HERE'),
       'txt_twitter_off' => t('Off'),
       'txt_twitter_on' => t('On'),
@@ -66,7 +48,7 @@ function _secureshare_add_config() {
     ),
     'gplus' => array(
       'status' => 'on',
-      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_gplus.png', //TODO Add path to image here
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_gplus.png',
       'txt_info' => t(variable_get('secureshare_gplus_txt_info', 'Standarttext fuer Gplus...')),
       'txt_twitter_off' => t('Off'),
       'txt_twitter_on' => t('On'),
@@ -78,7 +60,6 @@ function _secureshare_add_config() {
   );
 
   drupal_add_js(array('secureshare' => $secureshareconfig), 'setting');
-  
 
 
 }
@@ -87,12 +68,12 @@ function _secureshare_add_js() {
   static $jsadded;
 
   // path to lib
-  $secursharepath = libraries_get_path('socialshareprivacy');
-  $securesharelib = $secursharepath . '/jquery.socialshareprivacy.js';
+  $securesharepath = libraries_get_path('socialshareprivacy');
+  $securesharelib = $securesharepath . '/jquery.socialshareprivacy.js';
 
-  if(!$jsadded) {
+  if (!$jsadded) {
     _secureshare_add_config();
-    drupal_add_css($secursharepath . '/socialshareprivacy/socialshareprivacy.css');
+    drupal_add_css($securesharepath . '/socialshareprivacy/socialshareprivacy.css');
     drupal_add_js(drupal_get_path('module', 'secureshare') . '/secureshare.js');
     drupal_add_js($securesharelib);
     $jsadded = TRUE;
@@ -103,29 +84,29 @@ function _secureshare_add_js() {
  * Implements of hook_menu().
  */
 function secureshare_menu() {
-	$items['admin/settings/secureshare'] = array(
-		'title' => 'Secure share',
-		'description' => 'Configure general Settings',
-		'page callback' => 'system_admin_menu_block_page',
-		'access arguments' => array('administer secureshare'),
-		'position' => 'right',
-		'weight' => -20,
-		'type' => MENU_NORMAL_ITEM,
-		'file' => 'system.admin.inc',
-		'file path' => drupal_get_path('module', 'system'),
-	);
-	$items['admin/settings/secureshare/general'] = array(
-		'title' => 'General',
-		'description' => 'Configure general settings',
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('secureshare_admin_settings'),
-		'access arguments' => array('administer secureshare'),
-		'type' => MENU_NORMAL_ITEM,
-		'file' => 'secureshare.admin.inc',
-		'weight' => 0,
-	);
+  $items['admin/settings/secureshare'] = array(
+    'title' => 'Secure share',
+    'description' => 'Configure general Settings',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer secureshare'),
+    'position' => 'right',
+    'weight' => -20,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/settings/secureshare/general'] = array(
+    'title' => 'General',
+    'description' => 'Configure general settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('secureshare_admin_settings'),
+    'access arguments' => array('administer secureshare'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'secureshare.admin.inc',
+    'weight' => 0,
+  );
 
-	return $items;
+  return $items;
 }
 
 
@@ -134,7 +115,7 @@ function secureshare_menu() {
  * ().
  */
 function secureshare_perm() {
-	return array('users may administer Secure button', 'users may administer Secure button block', 'users may access Secure button');
+  return array('users may administer Secure button', 'users may administer Secure button block', 'users may access Secure button');
 }
 
 
@@ -142,37 +123,37 @@ function secureshare_perm() {
  * Implementation of hook_nodeapi().
  */
 function secureshare_nodeapi(&$node, $op, $teaser, $page) {
-	global $user, $base_url, $language;
-	$likebutton = '<div id="socialshareprivacy" class="socialshareprivacy"></div>';
-	$likebutton_weight = variable_get('secureshare_weight', '50');
-	switch ($op) {
-		case 'view':
-			$secureshare_showonteasers = variable_get('secureshare_showonteasers', 0);
-			// Set which node types users can "like".
-			$types_to_like = variable_get('secureshare_node_types', array('page'));
-			// Do not add the like button to any of the unchecked node types.
-			if (!in_array($node->type, $types_to_like, TRUE)) {
-				break;
-			}
-			if ($secureshare_showonteasers == 0) {
-				if (!$page) {
-					break;
-				}
-			}
-			// Check permissions
-			if (user_access('users may access Secure button')) {
-				// If set, keep the button out of teasers:
-				if ($secureshare_showonteasers == 0) {
-					if ($teaser) {
-						break;
-					}
-				}
-				$node->content['secureshare_button'] = array(
-					'#value' => $likebutton,
-					'#weight' => $likebutton_weight,
-				);
-				break;
-			}
-	}
+  global $user, $base_url, $language;
+  $likebutton = '<div class="socialshareprivacy"></div>';
+  $likebutton_weight = variable_get('secureshare_weight', '-50');
+  switch ($op) {
+    case 'view':
+      $secureshare_showonteasers = variable_get('secureshare_showonteasers', 0);
+      // Set which node types users can "like".
+      $types_to_like = variable_get('secureshare_node_types', array('page'));
+      // Do not add the like button to any of the unchecked node types.
+      if (!in_array($node->type, $types_to_like, TRUE)) {
+        break;
+      }
+      if ($secureshare_showonteasers == 0) {
+        if (!$page) {
+          break;
+        }
+      }
+      // Check permissions
+      if (user_access('users may access Secure button')) {
+        // If set, keep the button out of teasers:
+        if ($secureshare_showonteasers == 0) {
+          if ($teaser) {
+            break;
+          }
+        }
+        $node->content['secureshare_button'] = array(
+          '#value' => $likebutton,
+          '#weight' => $likebutton_weight,
+        );
+        break;
+      }
+  }
 }
 

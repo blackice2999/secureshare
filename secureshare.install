@@ -1,11 +1,9 @@
 <?php
-// $Id$
 
 /**
  * Implementation of hook_install().
  */
-function secureshare_install()
-{
-	//  There really is no "schema" to install at the moment.
+function secureshare_install() {
+  //  There really is no "schema" to install at the moment.
 }
 
