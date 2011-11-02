@@ -11,17 +11,93 @@
  * Implements of hook_init
  */
 function secureshare_init() {
-	drupal_add_css(drupal_get_path('module', 'secureshare') . '/css/secureshare.css');
-	drupal_add_js(drupal_get_path('module', 'secureshare') . '/js/jquery.socialshareprivacy.js');
-	drupal_add_js(array('secureshare' => array('module' => drupal_get_path('module', 'secureshare'))), 'setting');
-	drupal_add_js(array('secureshareconf' => array(
-		 'shover' => variable_get('secureshare_hovertext', 'Testtext'),
-		 'appid' => variable_get('secureshare_appid', '234037923313454'),
-	 )
-								),
-								'setting');
+    // add own javascript wrapper
+    _secureshare_add_js();
+
+	//drupal_add_css(drupal_get_path('module', 'secureshare') . '/css/secureshare.css');
+	//drupal_add_js(drupal_get_path('module', 'secureshare') . '/js/jquery.socialshareprivacy.js');
+	//drupal_add_js(array('secureshare' => array('module' => drupal_get_path('module', 'secureshare'))), 'setting');
+	//drupal_add_js(array('secureshareconf' => array(
+	//	 'shover' => variable_get('secureshare_hovertext', 'Testtext'),
+	//	 'appid' => variable_get('secureshare_appid', '234037923313454'),
+	// )
+	//							),
+	//							'setting');
 }
 
+function _secureshare_add_config() {
+  global $language;
+  //dpm(language_list());
+
+  $secursharelib = libraries_get_path('socialshareprivacy');
+
+  $secureshareconfig = array();
+
+  $services = array('facebook', 'twitter', 'gplus');
+
+  $secureshareconfig['txt_help'] = t('TXT Help Text');
+  $secureshareconfig['info_link'] = 'http://example.com';
+  $secureshareconfig['settings_perma'] = t('Settings Perma Ueberschrift');
+
+  $secureshareconfig['services'] = array(
+    'facebook' => array(
+      'status' => 'on',
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_facebook.png', //TODO Add path to image here
+      'txt_info' => t('FB INFO TEXT HERE'),
+      'txt_fb_off' => t('Off'),
+      'txt_fb_on' => t('On'),
+      'perma_option' => 'on',
+      'display_name' => t('Facebook'),
+      'referrer_track' => '',
+      'language' => 'de_DE',
+      'action' => t('rcecommend'),
+    ),
+    'twitter' => array(
+      'status' => 'on',
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_twitter.png', //TODO Add path to image here
+      'txt_info' => t('Twitter INFO TEXT HERE'),
+      'txt_twitter_off' => t('Off'),
+      'txt_twitter_on' => t('On'),
+      'perma_option' => 'on',
+      'display_name' => t('Twitter'),
+      'referrer_track' => '',
+      'language' => 'en',
+      'tweet_text' => t('tweet text'),
+    ),
+    'gplus' => array(
+      'status' => 'on',
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_gplus.png', //TODO Add path to image here
+      'txt_info' => t(variable_get('secureshare_gplus_txt_info', 'Standarttext fuer Gplus...')),
+      'txt_twitter_off' => t('Off'),
+      'txt_twitter_on' => t('On'),
+      'perma_option' => 'on',
+      'display_name' => t('GPLUS'),
+      'referrer_track' => '',
+      'language' => 'en',
+    ),
+  );
+
+  drupal_add_js(array('secureshare' => $secureshareconfig), 'setting');
+  
+
+
+}
+
+function _secureshare_add_js() {
+  static $jsadded;
+
+  // path to lib
+  $secursharepath = libraries_get_path('socialshareprivacy');
+  $securesharelib = $secursharepath . '/jquery.socialshareprivacy.js';
+
+  if(!$jsadded) {
+    _secureshare_add_config();
+    drupal_add_css($secursharepath . '/socialshareprivacy/socialshareprivacy.css');
+    drupal_add_js(drupal_get_path('module', 'secureshare') . '/secureshare.js');
+    drupal_add_js($securesharelib);
+    $jsadded = TRUE;
+  }
+}
 
 /**
  * Implements of hook_menu().
@@ -67,7 +143,7 @@ function secureshare_perm() {
  */
 function secureshare_nodeapi(&$node, $op, $teaser, $page) {
 	global $user, $base_url, $language;
-	$likebutton = '<div id="socialshareprivacy"></div>';
+	$likebutton = '<div id="socialshareprivacy" class="socialshareprivacy"></div>';
 	$likebutton_weight = variable_get('secureshare_weight', '50');
 	switch ($op) {
 		case 'view':

@@ -18,7 +18,7 @@
 				'facebook' : {
 					'status'						: 'on',
 					'app_id'						: '' + Drupal.settings.secureshareconf['appid'] + '',
-					'dummy_img'				 : '../' + Drupal.settings.secureshare['module'] + '/images/dummy_facebook.png',
+					'dummy_img'				 : './../' + Drupal.settings.secureshare['module'] + '/images/dummy_facebook.png',
 					'txt_info'					: '' + Drupal.settings.secureshareconf['shover'] + '',
 					'txt_fb_off'				: 'nicht mit Facebook verbunden',
 					'txt_fb_on'				 : 'mit Facebook verbunden',
@@ -29,7 +29,7 @@
 				},
 				'twitter' : {
 					'status'						: '1',
-					'dummy_img'				 : '../' + Drupal.settings.secureshare['module'] + '/images/dummy_twitter.png',
+					'dummy_img'				 : Drupal.settings.basePath + Drupal.settings.secureshare['module'] + '/images/dummy_twitter.png',
 					'txt_info'					: '' + Drupal.settings.secureshareconf['shover'] + '',
 					'txt_twitter_off'	 : 'nicht mit Twitter verbunden',
 					'txt_twitter_on'		: 'mit Twitter verbunden',
@@ -40,7 +40,7 @@
 				},
 				'gplus' : {
 					'status'						: 'on',
-					'dummy_img'				 : '../' + Drupal.settings.secureshare['module'] + '/images/dummy_gplus.png',
+					'dummy_img'				 : './' + Drupal.settings.secureshare['module'] + '/images/dummy_gplus.png',
 					'txt_info'					: '' + Drupal.settings.secureshareconf['shover'] + '',
 					'txt_gplus_off'		 : 'nicht mit Google+ verbunden',
 					'txt_plus_on'			 : 'mit Google+ verbunden',
@@ -334,8 +334,8 @@
 })(jQuery);
 
 
-jQuery(document).ready(function($) {
-	if ($('#socialshareprivacy')) {
-		$('#socialshareprivacy').socialSharePrivacy();
-	}
-});
+//jQuery(document).ready(function($) {
+//	if ($('#socialshareprivacy')) {
+//		$('#socialshareprivacy').socialSharePrivacy();
+//	}
+//});

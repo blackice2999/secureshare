@@ -11,6 +11,14 @@
  */
 function secureshare_admin_settings()
 {
+
+    $secureshareservices = array(
+      'fb' => 'facebook',
+      'twitter' => 'twitter',
+      'gplus' => 'gplus',
+    );
+
+    // module settings
 	$secureshare_node_options = node_get_types('names');
 	$form['secureshare_node_types'] = array(
 		'#type' => 'checkboxes',
@@ -26,23 +34,52 @@ function secureshare_admin_settings()
 		'#default_value' => variable_get('secureshare_showonteasers', 0),
 		'#description' => t('Only no, because javascript not working with more than one teaser on one site at the moment.'),
 	);
+
+    // service specific settings
+    foreach($secureshareservices as $service_short => $service_long){
+
+      $form['secureshare_' . $service_short] = array(
+        '#type' => 'fieldset',
+        '#title' => t($service_long . ' Settings'),
+        '#collapsible' => TRUE,
+      );
+      // we have some default values for all services, we use it here to prevent duplicate code...
+      $form['secureshare_' . $service_short][$service_short . '_status'] = array(
+        '#type' => 'select',
+        '#title' => t($service_long . ' TXT Info'),
+        '#default_value' => variable_get($service_short . '_status', 'on'),
+        '#options' => array('on' => t('on'), 'off' => t('off'))
+      );
+
+
+
+      // we have some default values for all services, we use it here to prevent duplicate code...
+      $form['secureshare_' . $service_short][$service_short . '_txt_info'] = array(
+        '#type' => 'textfield',
+        '#title' => t($service_long . ' TXT Info'),
+        '#default_value' => variable_get($service_short . '_txt_info', NULL),
+      );
+
+      $form['secureshare_' . $service_short][$service_short . '_txt_off'] = array(
+        '#type' => 'textfield',
+        '#title' => t($service_long . ' TXT Info'),
+        '#default_value' => variable_get('secureshare_service_' . $service_short . '_txt_info', NULL),
+      );
+
+      $form['secureshare_' . $service_short][$service_short . '_txt_on'] = array(
+        '#type' => 'textfield',
+        '#title' => t($service_long . ' TXT Info'),
+        '#default_value' => variable_get('secureshare_service_' . $service_short . '_txt_info', NULL),
+      );
+
+
+    }
+
 	$form['secureshare_services'] = array(
 		'#type' => 'checkboxes',
 		'#title' => t('Enabled services'),
 		'#description' => t('Not implemented yet.'),
-	);
-	$form['secureshare_appid'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Facebook Application-ID'),
-		'#default_value' => variable_get('secureshare_appid', '0'),
-		'#description' => t('Set the Facebook Application-ID'),
-	);
-
-	$form['secureshare_hovertext'] = array(
-		'#type' => 'textarea',
-		'#title' => t('Text to show on hover'),
-		'#default_value' => variable_get('secureshare_hovertext', '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.'),
-		'#description' => t('Specific text that will show when hover an service'),
+        '#options' => $option_list,
 	);
 
 	return system_settings_form($form);
