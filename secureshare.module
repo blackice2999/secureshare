@@ -17,15 +17,14 @@ function secureshare_init() {
 function _secureshare_add_config() {
   $secursharelib = libraries_get_path('socialshareprivacy');
   $secureshareconfig = array();
-  $services = array('facebook', 'twitter', 'gplus');
-  $secureshareconfig['txt_help'] = t(variable_get('secureshare_infotxt','Help Text here'));
-  $secureshareconfig['info_link'] = variable_get('secureshare_infourl', 'http://www.heise.de/ct/artikel/2-Klicks-fuer-mehr-Datenschutz-1333879.html');
+  $secureshareconfig['txt_help'] = t(variable_get('secureshare_infotxt', 'Please set text in administration')); // set hovertext for infbutton, default set in secureshare.admin.inc
+  $secureshareconfig['info_link'] = variable_get('secureshare_infourl', 'Please set URL in administration'); //set link to more informations, default set in secureshare.admin.inc
   $secureshareconfig['settings_perma'] = t('Dauerhaft aktivieren und Datenübertragung zustimmen:');
   $secureshareconfig['services'] = array(
     'facebook' => array(
       'status' => variable_get('fb_status', 'on'),
       'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_facebook.png',
-      'txt_info' => t(variable_get('fb_txt_info','FB INFO TEXT HERE')),
+      'txt_info' => t(variable_get('fb_txt_info', 'FB INFO TEXT HERE')), // default set in secureshare.admin.inc
       'txt_fb_off' => t('Off'),
       'txt_fb_on' => t('On'),
       'perma_option' => 'on',
@@ -37,7 +36,7 @@ function _secureshare_add_config() {
     'twitter' => array(
       'status' => variable_get('twitter_status', 'on'),
       'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_twitter.png',
-      'txt_info' => t(variable_get('twitter_txt_info','Twitter INFO TEXT HERE')),
+      'txt_info' => t(variable_get('twitter_txt_info', 'Twitter INFO TEXT HERE')), // default set in secureshare.admin.inc
       'txt_twitter_off' => t('Off'),
       'txt_twitter_on' => t('On'),
       'perma_option' => 'on',
@@ -49,7 +48,7 @@ function _secureshare_add_config() {
     'gplus' => array(
       'status' => variable_get('gplus_status', 'on'),
       'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_gplus.png',
-      'txt_info' => t(variable_get('gplus_txt_info', 'GPLUS INFO TEXT HERE')),
+      'txt_info' => t(variable_get('gplus_txt_info', 'GPLUS INFO TEXT HERE')), // default set in secureshare.admin.inc
       'txt_twitter_off' => t('Off'),
       'txt_twitter_on' => t('On'),
       'perma_option' => 'on',
@@ -115,7 +114,10 @@ function secureshare_menu() {
  * ().
  */
 function secureshare_perm() {
-  return array('users may administer Secure button', 'users may administer Secure button block', 'users may access Secure button');
+  return array(
+    'users may administer Secure button',
+    'users may administer Secure button block',
+    'users may access Secure button');
 }
 
 
@@ -123,9 +125,8 @@ function secureshare_perm() {
  * Implementation of hook_nodeapi().
  */
 function secureshare_nodeapi(&$node, $op, $teaser, $page) {
-  global $user, $base_url, $language;
-  $likebutton = '<div class="socialshareprivacy"></div>';
-  $likebutton_weight = variable_get('secureshare_weight', '-50');
+  $likebutton = '<div class="socialshareprivacy"></div>'; // the div, we use for sharebuttons
+  $likebutton_weight = variable_get('secureshare_weight', '-50'); //set the position of the buttons. Not implemented in administration yet!
   switch ($op) {
     case 'view':
       $secureshare_showonteasers = variable_get('secureshare_showonteasers', 0);

@@ -11,6 +11,7 @@
  */
 function secureshare_admin_settings() {
 
+  // the services we use
   $secureshareservices = array(
     'fb' => 'Facebook',
     'twitter' => 'Twitter',
@@ -18,6 +19,8 @@ function secureshare_admin_settings() {
   );
 
   // module settings
+  // we will set the german info texts from heise as default and make them translatable
+
   $secureshare_node_options = node_get_types('names');
   $form['secureshare_node_types'] = array(
     '#type' => 'checkboxes',
