@@ -13,3 +13,6 @@ Configuration:
 --------------
 go to admin/settings/secureshare/general and configure as you want. You can set separate hovertext for each service, you can set an URL for more informations,
 you can set the contenttype which showing the buttons and you can also set which services are activated.
+
+
+Beware: The code frome heise dont work with jquery 1.3.2, so you have to upadte it. I have tested with Version 1.5.2 and it work.
