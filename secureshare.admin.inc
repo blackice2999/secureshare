@@ -67,19 +67,6 @@ function secureshare_admin_settings() {
       '#title' => t($service_long . ' Info hover'),
       '#default_value' => variable_get($service_short . '_txt_info', '2 Klicks für mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie können Ihre Empfehlung senden. Schon beim Aktivieren werden Daten an Dritte übertragen; siehe <em>i</em>.'),
     );
-    /*
-        $form['secureshare_' . $service_short][$service_short . '_txt_off'] = array(
-          '#type' => 'textfield',
-          '#title' => t($service_long . ' Info off'),
-          '#default_value' => variable_get('secureshare_service_' . $service_short . '_txt_info', NULL),
-        );
-
-        $form['secureshare_' . $service_short][$service_short . '_txt_on'] = array(
-          '#type' => 'textfield',
-          '#title' => t($service_long . ' Info on'),
-          '#default_value' => variable_get('secureshare_service_' . $service_short . '_txt_info', NULL),
-        );
-    */
 
   }
 
