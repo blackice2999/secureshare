@@ -2,7 +2,7 @@
 
 a very simple Drupal module to implement the 2-klick-solution from heise.de ( http://www.heise.de/ct/artikel/2-Klicks-fuer-mehr-Datenschutz-1333879.html )
 for more privacy against Facebook, Twitter and Google+. This module implement the heise-jquery-code using libraries, so the user have to click one more
-time to activate the sharebuttons from Facebook, Twitter ore Google+.
+time to activate the sharebuttons from Facebook, Twitter or Google+.
 
 Installation:
 --------------
@@ -11,8 +11,6 @@ located in/sites/all/libraries/.
 
 Configuration:
 --------------
-go to admin/settings/secureshare/general and configure as you want. You can set separate hovertext for each service, you can set an URL for more informations,
+go to admin/config/secureshare/general and configure as you want. You can set separate hovertext for each service, you can set an URL for more informations,
 you can set the contenttype which showing the buttons and you can also set which services are activated.
 
-
-Beware: The code from heise don't want to work with jquery 1.3.2, so you have to upadte it. I have tested with Version 1.5.2 and it work.
