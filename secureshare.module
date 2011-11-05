@@ -10,14 +10,73 @@
  * Implements of hook_init
  */
 function secureshare_init() {
-	drupal_add_js(libraries_get_path('secureshare') . '/jquery.socialshareprivacy.js');
-	drupal_add_js(array('secureshare' => array('module' => drupal_get_path('module', 'secureshare'))), 'setting');
-	drupal_add_js(array('secureshareconf' => array(
-    'shover' => variable_get('secureshare_hovertext', 'Please enter your Text in the administration of SecureShare'),
-		'appid' => variable_get('secureshare_appid', '0'),
-  )
-	),
-	'setting');
+  // add own javascript wrapper
+  _secureshare_add_js();
+}
+
+function _secureshare_add_config() {
+  $secursharelib = libraries_get_path('socialshareprivacy');
+  $secureshareconfig = array();
+  $secureshareconfig['txt_help'] = t(variable_get('secureshare_infotxt', 'Please set text in administration')); // set hovertext for infbutton, default set in secureshare.admin.inc
+  $secureshareconfig['info_link'] = variable_get('secureshare_infourl', 'Please set URL in administration'); //set link to more informations, default set in secureshare.admin.inc
+  $secureshareconfig['settings_perma'] = t('Dauerhaft aktivieren und Datenübertragung zustimmen:');
+  $secureshareconfig['services'] = array(
+    'facebook' => array(
+      'status' => variable_get('fb_status', 'on'),
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_facebook.png',
+      'txt_info' => t(variable_get('fb_txt_info', 'FB INFO TEXT HERE')), // default set in secureshare.admin.inc
+      'txt_fb_off' => t('Off'),
+      'txt_fb_on' => t('On'),
+      'perma_option' => 'on',
+      'display_name' => t('Facebook'),
+      'referrer_track' => '',
+      'language' => 'de_DE',
+      'action' => t('recommend'),
+    ),
+    'twitter' => array(
+      'status' => variable_get('twitter_status', 'on'),
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_twitter.png',
+      'txt_info' => t(variable_get('twitter_txt_info', 'Twitter INFO TEXT HERE')), // default set in secureshare.admin.inc
+      'txt_twitter_off' => t('Off'),
+      'txt_twitter_on' => t('On'),
+      'perma_option' => 'on',
+      'display_name' => t('Twitter'),
+      'referrer_track' => '',
+      'language' => 'en',
+      'tweet_text' => t('tweet text'),
+    ),
+    'gplus' => array(
+      'status' => variable_get('gplus_status', 'on'),
+      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_gplus.png',
+      'txt_info' => t(variable_get('gplus_txt_info', 'GPLUS INFO TEXT HERE')), // default set in secureshare.admin.inc
+      'txt_twitter_off' => t('Off'),
+      'txt_twitter_on' => t('On'),
+      'perma_option' => 'on',
+      'display_name' => t('GPLUS'),
+      'referrer_track' => '',
+      'language' => 'en',
+    ),
+  );
+
+  drupal_add_js(array('secureshare' => $secureshareconfig), 'setting');
+
+
+}
+
+function _secureshare_add_js() {
+  static $jsadded;
+
+  // path to lib
+  $securesharepath = libraries_get_path('socialshareprivacy');
+  $securesharelib = $securesharepath . '/jquery.socialshareprivacy.js';
+
+  if (!$jsadded) {
+    _secureshare_add_config();
+    drupal_add_css($securesharepath . '/socialshareprivacy/socialshareprivacy.css');
+    drupal_add_js(drupal_get_path('module', 'secureshare') . '/secureshare.js');
+    drupal_add_js($securesharelib);
+    $jsadded = TRUE;
+  }
 }
 
 /**
@@ -78,7 +137,7 @@ function secureshare_node_view($node, $view_mode) {
   $showonteasers = variable_get('secureshare_showonteasers', 0);
   $show = ( ! empty($types[$node->type]) && user_access('access secureshare'));
   $webpage_to_like = url("node/$node->nid", array('absolute' => TRUE));
-  
+
   if ($show) {
     if ($showonteasers == 0) {
       if ($view_mode == 'teaser') {
@@ -101,7 +160,7 @@ function secureshare_node_view($node, $view_mode) {
 }
 
 function _secureshare_field() {
-  $output = '<div id="socialshareprivacy"></div>';
+  $output = '<div class="socialshareprivacy"></div>';
   return $output;
 }
 
