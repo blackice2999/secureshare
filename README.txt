@@ -1,16 +1,16 @@
+*SECURESHARE*
 
-*SecureShare*
-
-SecureShare will implement the 2-click-solution from heise.de ( http://www.heise.de/ct/artikel/2-Klicks-fuer-mehr-Datenschutz-1333879.html )
-for more security into your Drupal. After installing SecureShare the buttons for Facebook, Google+ and Twitter will be only active after a second click from the user.
-There will be no data send to Facebook, Google+ or Twitter before the button is clicked.
-
-More description coming soon...
+a very simple Drupal module to implement the 2-klick-solution from heise.de ( http://www.heise.de/ct/artikel/2-Klicks-fuer-mehr-Datenschutz-1333879.html )
+for more privacy against Facebook, Twitter and Google+. This module implement the heise-jquery-code using libraries, so the user have to click one more
+time to activate the sharebuttons from Facebook, Twitter or Google+.
 
 Installation:
 --------------
-Download the SecureShare-JS from https://github.com/Helrunar/secureshare-js and copying it to /sites/all/libraries/secureshare.
-We have to do this, because the original Javascript is developed under the MIT-license, which ist not
-compatible with the GPL
+Download the jquery-code from http://www.heise.de/extras/socialshareprivacy/ , extract it and put it in the librariesfolder
+located in/sites/all/libraries/.
 
+Configuration:
+--------------
+go to admin/config/secureshare/general and configure as you want. You can set separate hovertext for each service, you can set an URL for more informations,
+you can set the contenttype which showing the buttons and you can also set which services are activated.
 
