@@ -23,15 +23,14 @@ function secureshare_blocks_block_info() {
  */
 function secureshare_blocks_block_configure($delta = '') {
   $form = array();
-
   if ($delta === 'secureshare_overall') {
-    $form['secureshare_settings'] = array(
-      '#type'  => 'markup',
-      '#markup' => 'test',
-      '#value' => 'test',
-    );
-  }
 
+    $form['secureshare_block_settings'] = array(
+      '#type'  => 'fieldset',
+      '#tree' => TRUE,
+    );
+
+  }
   return $form;
 }
 
@@ -47,15 +46,9 @@ function secureshare_blocks_block_view($delta = '') {
     case 'secureshare_overall':
       $block['subject'] = t('Secureshare overall block');
       $block['content'] = array(
-        'mytitletest' => array(
-          '#type' => 'markup',
-          '#markup' => t('testing !!!'),
-        ),
         'securesharelement' => array(
           '#type' => 'secureshare',
-          '#secureshare_options' => array(
-            'css_path' => 'bbb',
-          ),
+          '#secureshare_options' => array(),
         ),
       );
     break;
