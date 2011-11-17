@@ -10,7 +10,8 @@
  * registers our element theme function "theme_secureshare_element"
  * @return array
  */
-function secureshare_theme() {
+function secureshare_theme()
+{
   $theme = array();
 
   $theme['secureshare_element'] = array(
@@ -23,29 +24,15 @@ function secureshare_theme() {
 /**
  * Implementation of hook_element_info()
  */
-function secureshare_element_info() {
+function secureshare_element_info()
+{
   $elements = array();
-
-  $library_path = libraries_get_path('socialshareprivacy');
 
   $elements['secureshare'] = array(
     '#input' => FALSE,
     '#theme_wrappers' => array('secureshare_element'),
     '#pre_render' => array('secureshare_pre_render_element'),
-    '#secureshare_config' => array(
-      'css_path' => '',
-      'services' => array(
-        'facebook' => array(
-          'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png',
-        ),
-        'gplus' => array(
-          'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png',
-        ),
-        'twitter' => array(
-          'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png',
-        ),
-      ),
-    ),
+    '#secureshare_config' => array(),
     '#attached' => array(
       'library' => array(
         array('secureshare', 'socialshareprivacy'),
@@ -61,14 +48,17 @@ function secureshare_element_info() {
  * we use it to add element specific settings to js and generate a html id
  * @param $element
  */
-function secureshare_pre_render_element($element) {
+function secureshare_pre_render_element($element)
+{
 
   // Skip already processed elements.
-   if (isset($element['#secureshare_processed'])) {
-     return $element;
-   }
-   // Initialize #secureshare_processed, so we do not process this element again.
-   $element['#secureshare_processed'] = FALSE;
+  if (isset($element['#secureshare_processed'])) {
+    return $element;
+  }
+  // Initialize #secureshare_processed, so we do not process this element again.
+  $element['#secureshare_processed'] = FALSE;
+
+  $library_path = libraries_get_path('socialshareprivacy');
 
   // assign a element id if we dont have one
   if (!isset($element['#id'])) {
@@ -77,10 +67,34 @@ function secureshare_pre_render_element($element) {
 
   // assign settings to js
   $settings = $element['#secureshare_config'];
+  // assign minimal default settings
+  $settings += array(
+    // need to be blank, because heise plugin script try to load a css file...
+    'css_path' => '',
+    // we need to set the path to images of the library new
+    'services' => array(
+      'facebook' => array(
+        'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png',
+      ),
+      'gplus' => array(
+        'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png',
+      ),
+      'twitter' => array(
+        'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png',
+      ),
+    ),
+  );
+
+  // we need to map the language for facebook...
+  if (isset($settings['services']['facebook']['language'])) {
+    $settings['services']['facebook']['language'] = (_secureshare_language_mapper($settings['services']['facebook']['language'])) ?
+      _secureshare_language_mapper($settings['services']['facebook']['language']) :
+      $settings['services']['facebook']['language'];
+  }
 
   $element['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('secureshare' => array($element['#id'] => $settings)),
+    'type' => 'setting',
+    'data' => array('secureshare' => array($element['#id'] => $settings)),
   );
 
   $element['#secureshare_processed'] = TRUE;
@@ -92,7 +106,8 @@ function secureshare_pre_render_element($element) {
  * Theme function returns the secureshare element output
  * @param $element
  */
-function theme_secureshare_element(&$variables) {
+function theme_secureshare_element(&$variables)
+{
   $element = $variables['element'];
 
   // Assign an html ID.
@@ -111,7 +126,8 @@ function theme_secureshare_element(&$variables) {
  *
  * @return (array)
  */
-function secureshare_library() {
+function secureshare_library()
+{
   $libraries = array();
 
   $libraries['socialshareprivacy'] = array(
@@ -132,11 +148,134 @@ function secureshare_library() {
 }
 
 /**
+ * Helper form function provides the settings elements without default values
+ * @return array
+ */
+function secureshare_settings_form()
+{
+  $form = array();
+
+  $form['secureshare_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Secureshare settings'),
+    '#tree' => TRUE,
+  );
+
+  $form['secureshare_settings']['info_link'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Disclaimer info link'),
+    '#description' => t('Link to detailed disclaimer information'),
+  );
+
+  $form['secureshare_settings']['txt_help'] = array(
+    '#type' => 'textarea',
+    '#title' => t('MouseOver information'),
+    '#description' => t('MouseOver text for the informations icon.'),
+  );
+
+  $form['secureshare_settings']['settings_perma'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Perma settings heading'),
+    '#description' => t('the heading text for the perma settings dialog'),
+  );
+
+  // @TODO: add integer validation
+  $form['secureshare_settings']['cookie_expires'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cookie expire'),
+    '#description' => t('Cookie expire in days'),
+  );
+
+  $form['secureshare_settings']['services']['facebook'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Facebook'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+    $form['secureshare_settings']['services']['facebook']['dummy_img'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Imagepath'),
+      '#description' => t('path to the displayed image'),
+    );
+
+    $form['secureshare_settings']['services']['facebook']['txt_info'] = array(
+      '#type' => 'textfield',
+      '#title' => t('MouseOver button text'),
+      '#description' => t('MouseOver button text'),
+    );
+
+    $form['secureshare_settings']['services']['facebook']['txt_fb_off'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Image text off'),
+      '#description' => t('alternative text for the image button on off mode'),
+    );
+
+    $form['secureshare_settings']['services']['facebook']['txt_fb_on'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Image text on'),
+      '#description' => t('alternative text for the image button in on mode'),
+    );
+
+    $form['secureshare_settings']['services']['facebook']['perma_option'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('perma option'),
+      '#description' => t('Allow permanent activation?'),
+    );
+
+    $form['secureshare_settings']['services']['facebook']['display_name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Display name'),
+      '#description' => t('Name of the displayed social network.'),
+    );
+
+    // @TODO: need to be implemented
+    //$form['secureshare_settings']['services']['facebook']['referrer_track'] = array();
+
+    $form['secureshare_settings']['services']['facebook']['language'] = array(
+      '#type' => 'select',
+      '#title' => t('Language detection'),
+      '#description' => t('Language detection mode'),
+      '#options' => array(
+        'user' => t('User language'),
+        'system' => t('Default language'),
+      ),
+    );
+
+    $form['secureshare_settings']['services']['facebook']['action'] = array(
+      '#type' => 'select',
+      '#title' => t('Button style'),
+      '#options' => array(
+        'recommend' => t('recommend'),
+        'like' => t('like'),
+      ),
+    );
+
+
+  $form['secureshare_settings']['services']['twitter'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Twitter'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  $form['secureshare_settings']['services']['gplus'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Google+'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  return $form;
+}
+
+/**
  * Helper method to map the drupal language shortcode to locale code...
  * @param null $lang
  * @return string
  */
-function _secureshare_language_mapper($lang = NULL){
+function _secureshare_language_mapper($lang = NULL)
+{
   $languages = array(
     'af' => 'af_ZA',
     'ar' => 'ar_AR',
