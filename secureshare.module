@@ -193,6 +193,12 @@ function secureshare_settings_form()
     '#collapsed' => TRUE,
   );
 
+    $form['secureshare_settings']['services']['facebook']['status'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enabled'),
+      '#description' => t('enable facebook button'),
+    );
+
     $form['secureshare_settings']['services']['facebook']['dummy_img'] = array(
       '#type' => 'textfield',
       '#title' => t('Imagepath'),
@@ -259,11 +265,131 @@ function secureshare_settings_form()
     '#collapsed' => TRUE,
   );
 
+  $form['secureshare_settings']['services']['twitter']['status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enabled'),
+    '#description' => t('enable twitter button'),
+  );
+
+  $form['secureshare_settings']['services']['twitter']['dummy_img'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Imagepath'),
+    '#description' => t('path to the displayed image'),
+  );
+
+  $form['secureshare_settings']['services']['twitter']['txt_info'] = array(
+    '#type' => 'textfield',
+    '#title' => t('MouseOver button text'),
+    '#description' => t('MouseOver button text'),
+  );
+
+  $form['secureshare_settings']['services']['twitter']['txt_twitter_off'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Image text off'),
+    '#description' => t('alternative text for the image button on off mode'),
+  );
+
+  $form['secureshare_settings']['services']['twitter']['txt_twitter_on'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Image text on'),
+    '#description' => t('alternative text for the image button in on mode'),
+  );
+
+  $form['secureshare_settings']['services']['twitter']['perma_option'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('perma option'),
+    '#description' => t('Allow permanent activation?'),
+  );
+
+  $form['secureshare_settings']['services']['twitter']['display_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Display name'),
+    '#description' => t('Name of the displayed social network.'),
+  );
+
+  // @TODO: need to be implemented
+  //$form['secureshare_settings']['services']['twitter']['referrer_track'] = array();
+
+  $form['secureshare_settings']['services']['twitter']['tweet_text'] = array(
+    '#type' => 'select',
+    '#title' => t('Tweet text'),
+    '#description' => t('tweet text detection mode'),
+    '#options' => array(
+      'default' => t('Use script default'),
+    ),
+  );
+
+  $form['secureshare_settings']['services']['twitter']['language'] = array(
+    '#type' => 'select',
+    '#title' => t('Language detection'),
+    '#description' => t('Language detection mode'),
+    '#options' => array(
+      'user' => t('User language'),
+      'system' => t('Default language'),
+    ),
+  );
+
   $form['secureshare_settings']['services']['gplus'] = array(
     '#type' => 'fieldset',
     '#title' => t('Google+'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+  );
+
+// ---
+  $form['secureshare_settings']['services']['gplus']['status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enabled'),
+    '#description' => t('enable google+ button'),
+  );
+
+  $form['secureshare_settings']['services']['gplus']['dummy_img'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Imagepath'),
+    '#description' => t('path to the displayed image'),
+  );
+
+  $form['secureshare_settings']['services']['gplus']['txt_info'] = array(
+    '#type' => 'textfield',
+    '#title' => t('MouseOver button text'),
+    '#description' => t('MouseOver button text'),
+  );
+
+  $form['secureshare_settings']['services']['gplus']['txt_gplus_off'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Image text off'),
+    '#description' => t('alternative text for the image button on off mode'),
+  );
+
+  $form['secureshare_settings']['services']['gplus']['txt_gplus_on'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Image text on'),
+    '#description' => t('alternative text for the image button in on mode'),
+  );
+
+  $form['secureshare_settings']['services']['gplus']['perma_option'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('perma option'),
+    '#description' => t('Allow permanent activation?'),
+  );
+
+  $form['secureshare_settings']['services']['gplus']['display_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Display name'),
+    '#description' => t('Name of the displayed social network.'),
+  );
+
+  // @TODO: need to be implemented
+  //$form['secureshare_settings']['services']['gplus']['referrer_track'] = array();
+
+  $form['secureshare_settings']['services']['gplus']['language'] = array(
+    '#type' => 'select',
+    '#title' => t('Language detection'),
+    '#description' => t('Language detection mode'),
+    '#options' => array(
+      'user' => t('User language'),
+      'system' => t('Default language'),
+    ),
   );
 
   return $form;
