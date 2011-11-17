@@ -5,162 +5,237 @@
  * Adds Sharebuttons from Facebook, Google+ and Twitter to each selected node type and make it active after confirm from user.
  */
 
-
 /**
- * Implements of hook_init
+ * Implementation of hook_theme()
+ * registers our element theme function "theme_secureshare_element"
+ * @return array
  */
-function secureshare_init() {
-  // add own javascript wrapper
-  _secureshare_add_js();
+function secureshare_theme() {
+  $theme = array();
+
+  $theme['secureshare_element'] = array(
+    'render element' => 'element',
+  );
+
+  return $theme;
 }
 
-function _secureshare_add_config() {
-  $secursharelib = libraries_get_path('socialshareprivacy');
-  $secureshareconfig = array();
-  $secureshareconfig['txt_help'] = t(variable_get('secureshare_infotxt', 'Please set text in administration')); // set hovertext for infbutton, default set in secureshare.admin.inc
-  $secureshareconfig['info_link'] = variable_get('secureshare_infourl', 'Please set URL in administration'); //set link to more informations, default set in secureshare.admin.inc
-  $secureshareconfig['settings_perma'] = t('Dauerhaft aktivieren und Datenübertragung zustimmen:');
-  $secureshareconfig['services'] = array(
-    'facebook' => array(
-      'status' => variable_get('fb_status', 'on'),
-      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_facebook.png',
-      'txt_info' => t(variable_get('fb_txt_info', 'FB INFO TEXT HERE')), // default set in secureshare.admin.inc
-      'txt_fb_off' => t('Off'),
-      'txt_fb_on' => t('On'),
-      'perma_option' => 'on',
-      'display_name' => t('Facebook'),
-      'referrer_track' => '',
-      'language' => 'de_DE',
-      'action' => t('recommend'),
+/**
+ * Implementation of hook_element_info()
+ */
+function secureshare_element_info() {
+  $elements = array();
+
+  $library_path = libraries_get_path('socialshareprivacy');
+
+  $elements['secureshare'] = array(
+    '#input' => FALSE,
+    '#theme_wrappers' => array('secureshare_element'),
+    '#pre_render' => array('secureshare_pre_render_element'),
+    '#secureshare_config' => array(
+      'css_path' => '',
+      'services' => array(
+        'facebook' => array(
+          'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png',
+        ),
+        'gplus' => array(
+          'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png',
+        ),
+        'twitter' => array(
+          'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png',
+        ),
+      ),
     ),
-    'twitter' => array(
-      'status' => variable_get('twitter_status', 'on'),
-      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_twitter.png',
-      'txt_info' => t(variable_get('twitter_txt_info', 'Twitter INFO TEXT HERE')), // default set in secureshare.admin.inc
-      'txt_twitter_off' => t('Off'),
-      'txt_twitter_on' => t('On'),
-      'perma_option' => 'on',
-      'display_name' => t('Twitter'),
-      'referrer_track' => '',
-      'language' => 'en',
-      'tweet_text' => t('tweet text'),
-    ),
-    'gplus' => array(
-      'status' => variable_get('gplus_status', 'on'),
-      'dummy_img' => base_path() . $secursharelib . '/socialshareprivacy/images/dummy_gplus.png',
-      'txt_info' => t(variable_get('gplus_txt_info', 'GPLUS INFO TEXT HERE')), // default set in secureshare.admin.inc
-      'txt_twitter_off' => t('Off'),
-      'txt_twitter_on' => t('On'),
-      'perma_option' => 'on',
-      'display_name' => t('GPLUS'),
-      'referrer_track' => '',
-      'language' => 'en',
+    '#attached' => array(
+      'library' => array(
+        array('secureshare', 'socialshareprivacy'),
+      ),
     ),
   );
 
-  drupal_add_js(array('secureshare' => $secureshareconfig), 'setting');
-
-
+  return $elements;
 }
 
-function _secureshare_add_js() {
-  static $jsadded;
+/**
+ * Implements hook_element_info() > #pre_render
+ * we use it to add element specific settings to js and generate a html id
+ * @param $element
+ */
+function secureshare_pre_render_element($element) {
 
-  // path to lib
-  $securesharepath = libraries_get_path('socialshareprivacy');
-  $securesharelib = $securesharepath . '/jquery.socialshareprivacy.js';
+  // Skip already processed elements.
+   if (isset($element['#secureshare_processed'])) {
+     return $element;
+   }
+   // Initialize #secureshare_processed, so we do not process this element again.
+   $element['#secureshare_processed'] = FALSE;
 
-  if (!$jsadded) {
-    _secureshare_add_config();
-    drupal_add_css($securesharepath . '/socialshareprivacy/socialshareprivacy.css');
-    drupal_add_js(drupal_get_path('module', 'secureshare') . '/secureshare.js');
-    drupal_add_js($securesharelib);
-    $jsadded = TRUE;
+  // assign a element id if we dont have one
+  if (!isset($element['#id'])) {
+    $element['#id'] = drupal_html_id('secureshare');
   }
+
+  // assign settings to js
+  $settings = $element['#secureshare_config'];
+
+  $element['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array('secureshare' => array($element['#id'] => $settings)),
+  );
+
+  $element['#secureshare_processed'] = TRUE;
+
+  return $element;
 }
 
 /**
- * Implements of hook_menu().
+ * Theme function returns the secureshare element output
+ * @param $element
  */
-function secureshare_menu() {
-	$items['admin/config/secureshare'] = array(
-    'title' => 'Secure share',
-    'description' => 'Configure general Settings',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer secureshare'),
-    'position' => 'right',
-    'weight' => -20,
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
-  );
-  $items['admin/config/secureshare/general'] = array(
-    'title' => 'General',
-    'description' => 'Configure general settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('secureshare_admin_settings'),
-    'access arguments' => array('administer secureshare'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'secureshare.admin.inc',
-    'weight' => 0,
-  );
-	
-  return $items;
-}
+function theme_secureshare_element(&$variables) {
+  $element = $variables['element'];
 
-
-/**
- * Implements of hook_permission().
- */
-function secureshare_permission() {
-  return array(
-    'administer secureshare' => array(
-      'title' => t('Administer secure Sharebuttons'),
-      'description' => t('Perform administration tasks for secure Sharebuttons')
-    ),
-    'administer secureshare block' => array(
-      'title' => t('Administer secure Sharebuttons block'),
-      'description' => t('Perform administration tasks for secure Sharebuttons')
-    ),
-    'access secureshare' => array(
-      'title' => t('Access secure Sharebuttons'),
-    ),
-  );
-}
-
-/**
- * Implements of hook_node_view().
- */
-function secureshare_node_view($node, $view_mode) {
-  global $user, $base_url;
-  $types = variable_get('secureshare_node_types', array());
-  $showonteasers = variable_get('secureshare_showonteasers', 0);
-  $show = ( ! empty($types[$node->type]) && user_access('access secureshare'));
-  $webpage_to_like = url("node/$node->nid", array('absolute' => TRUE));
-
-  if ($show) {
-    if ($showonteasers == 0) {
-      if ($view_mode == 'teaser') {
-        $node->content['secureshare_field'] = NULL;
-      }
-      if ($view_mode == 'full') {
-        $node->content['secureshare_field'] = array(
-          '#markup' => _secureshare_field($webpage_to_like),
-        );
-      }
-    }
-    elseif ($showonteasers == 1) {
-      if ($view_mode == 'teaser' || $view_mode == 'full') {
-        $node->content['secureshare_field'] = array(
-         '#markup' => _secureshare_field($webpage_to_like),
-        );
-      }
-    }
+  // Assign an html ID.
+  if (!isset($element['#attributes']['id'])) {
+    $element['#attributes']['id'] = $element['#id'];
   }
+
+  return '<div' . drupal_attributes($element['#attributes']) . '>' . $element['#children'] . '</div>';
 }
 
-function _secureshare_field() {
-  $output = '<div class="socialshareprivacy"></div>';
-  return $output;
+/**
+ * Implementation of hook_library()
+ * registers the socialshareprivacy js plugin from heise as drupal library
+ * we also register the css file here und remove the css_url parameter on heise plugin via defaults
+ * because we want the css file in drupal best practice manier ;)
+ *
+ * @return (array)
+ */
+function secureshare_library() {
+  $libraries = array();
+
+  $libraries['socialshareprivacy'] = array(
+    'title' => 'Socialshareprivacy',
+    'website' => 'http://www.heise.de/extras/socialshareprivacy/',
+    'version' => '1.3',
+    'js' => array(
+      drupal_get_path('module', 'secureshare') . '/js/secureshare.d7.init.js' => array(),
+      libraries_get_path('socialshareprivacy') . '/jquery.socialshareprivacy.js' => array(),
+    ),
+    // loads the default css
+    'css' => array(
+      libraries_get_path('socialshareprivacy') . '/socialshareprivacy/socialshareprivacy.css' => array(),
+    ),
+  );
+
+  return $libraries;
 }
 
+/**
+ * Helper method to map the drupal language shortcode to locale code...
+ * @param null $lang
+ * @return string
+ */
+function _secureshare_language_mapper($lang = NULL){
+  $languages = array(
+    'af' => 'af_ZA',
+    'ar' => 'ar_AR',
+    'ay' => 'ay_BO',
+    'az' => 'az_AZ',
+    'be' => 'be_BY',
+    'bg' => 'bg_BG',
+    'bn' => 'bn_IN',
+    'bs' => 'bs_BA',
+    'ca' => 'ca_ES',
+    'ck' => 'ck_US',
+    'cs' => 'cs_CZ',
+    'cy' => 'cy_GB',
+    'da' => 'da_DK',
+    'de' => 'de_DE',
+    'el' => 'el_GR',
+    'en' => 'en_US',
+    'eo' => 'eo_EO',
+    'es' => 'es_ES',
+    'et' => 'et_EE',
+    'eu' => 'eu_ES',
+    'fa' => 'fa_IR',
+    'fb' => 'fb_FI',
+    'fb' => 'fb_LT',
+    'fi' => 'fi_FI',
+    'fo' => 'fo_FO',
+    'fr' => 'fr_CA',
+    'fr' => 'fr_FR',
+    'ga' => 'ga_IE',
+    'gl' => 'gl_ES',
+    'gn' => 'gn_PY',
+    'gu' => 'gu_IN',
+    'he' => 'he_IL',
+    'hi' => 'hi_IN',
+    'hr' => 'hr_HR',
+    'hu' => 'hu_HU',
+    'hy' => 'hy_AM',
+    'id' => 'id_ID',
+    'is' => 'is_IS',
+    'it' => 'it_IT',
+    'ja' => 'ja_JP',
+    'jv' => 'jv_ID',
+    'ka' => 'ka_GE',
+    'kk' => 'kk_KZ',
+    'km' => 'km_KH',
+    'kn' => 'kn_IN',
+    'ko' => 'ko_KR',
+    'ku' => 'ku_TR',
+    'la' => 'la_VA',
+    'li' => 'li_NL',
+    'lt' => 'lt_LT',
+    'lv' => 'lv_LV',
+    'mg' => 'mg_MG',
+    'mk' => 'mk_MK',
+    'ml' => 'ml_IN',
+    'mn' => 'mn_MN',
+    'mr' => 'mr_IN',
+    'ms' => 'ms_MY',
+    'mt' => 'mt_MT',
+    'nb' => 'nb_NO',
+    'ne' => 'ne_NP',
+    'nl' => 'nl_BE',
+    'nl' => 'nl_NL',
+    'nn' => 'nn_NO',
+    'pa' => 'pa_IN',
+    'pl' => 'pl_PL',
+    'ps' => 'ps_AF',
+    'pt' => 'pt_PT',
+    'qu' => 'qu_PE',
+    'rm' => 'rm_CH',
+    'ro' => 'ro_RO',
+    'ru' => 'ru_RU',
+    'sa' => 'sa_IN',
+    'se' => 'se_NO',
+    'sk' => 'sk_SK',
+    'sl' => 'sl_SI',
+    'so' => 'so_SO',
+    'sq' => 'sq_AL',
+    'sr' => 'sr_RS',
+    'sv' => 'sv_SE',
+    'sw' => 'sw_KE',
+    'sy' => 'sy_SY',
+    'ta' => 'ta_IN',
+    'te' => 'te_IN',
+    'tg' => 'tg_TJ',
+    'th' => 'th_TH',
+    'tl' => 'tl_PH',
+    'tl' => 'tl_ST',
+    'tr' => 'tr_TR',
+    'tt' => 'tt_RU',
+    'uk' => 'uk_UA',
+    'ur' => 'ur_PK',
+    'uz' => 'uz_UZ',
+    'vi' => 'vi_VN',
+    'xh' => 'xh_ZA',
+    'yi' => 'yi_DE',
+    'zh' => 'zh_CN',
+    'zu' => 'zu_ZA',
+  );
+
+  return (isset($languages[$lang])) ? $languages[$lang] : 'en_US';
+}

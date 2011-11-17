@@ -1,10 +1,6 @@
-name = Secure Sharebuttons
-description = Displays Sharebuttons only after confirm from user
+name = Secure Sharebuttons - Core
+description = provides the Socialshare core functionality used by other modules.
 core = 7.x
 configure = admin/config/secureshare
-package = "Secure Sharebuttons"
-
+package = "Secureshare"
 dependencies[] = libraries
-
-stylesheets[all][] = css/secureshare.css
-
