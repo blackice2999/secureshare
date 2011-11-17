@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * Implementation of hook_block_info()
+ * provides a Socialshare privacy as block
+ * @return array
+ */
+function secureshare_blocks_block_info() {
+  $blocks = array();
+
+  $blocks['secureshare_overall'] = array(
+    'info' => t('Socialshare privacy'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_configure()
+ * provides block settings for Socialshare privacy.
+ * @param string $delta
+ * @return array
+ */
+function secureshare_blocks_block_configure($delta = '') {
+  $form = array();
+
+  if ($delta === 'secureshare_overall') {
+    $form['secureshare_settings'] = array(
+      '#type'  => 'markup',
+      '#markup' => 'test',
+      '#value' => 'test',
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Implementation of hook_block_view
+ * @param string $delta
+ * @return array
+ */
+function secureshare_blocks_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'secureshare_overall':
+      $block['subject'] = t('Secureshare overall block');
+      $block['content'] = array(
+        'mytitletest' => array(
+          '#type' => 'markup',
+          '#markup' => t('testing !!!'),
+        ),
+        'securesharelement' => array(
+          '#type' => 'secureshare',
+          '#secureshare_options' => array(
+            'css_path' => 'bbb',
+          ),
+        ),
+      );
+    break;
+  }
+
+  return $block;
+}
