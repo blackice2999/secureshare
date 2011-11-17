@@ -25,11 +25,10 @@ function secureshare_blocks_block_configure($delta = '') {
   $form = array();
 
   if ($delta === 'secureshare_overall') {
-    $form['secureshare_settings'] = array(
-      '#type'  => 'markup',
-      '#markup' => 'test',
-      '#value' => 'test',
-    );
+
+    // combine form with default form
+    $form += secureshare_settings_form();
+
   }
 
   return $form;
