@@ -6,7 +6,7 @@
 
             if ('secureshare' in settings) {
                 $.each(settings.secureshare, function(id, configuration){
-                    $('#' + id).once('secureshare', function () {
+                    $('#' + id).once('secureshare-processed', function () {
                         $(this).socialSharePrivacy(configuration);
                     });
                 });
