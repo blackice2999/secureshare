@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Adds Sharebuttons from Facebook, Google+ and Twitter to each selected node type and make it active after confirm from user.
@@ -20,6 +19,7 @@ function secureshare_help($path, $arg) {
   }
 
 }
+
 /**
  * Implementation of hook_theme()
  * registers our element theme function "theme_secureshare_element"
@@ -85,22 +85,19 @@ function secureshare_pre_render_element($element) {
     // need to be blank, because heise plugin script try to load a css file...
     'css_path' => '',
     // we need to set the path to images of the library new
-    'services' => array(
-      'facebook' => array(
-        'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png',
-      ),
-      'gplus' => array(
-        'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png',
-      ),
-      'twitter' => array(
-        'dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png',
-      ),
-    ),
-  );
+    'services' => array());
+
+  // ensure providers exists
+  $settings['services'] += array('facebook' => array(), 'twitter' => array(), 'gplus' => array());
+  // merge in the default images from library
+  $settings['services']['facebook'] += array('dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png',);
+  $settings['services']['twitter'] += array('dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png',);
+  $settings['services']['gplus'] += array('dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png',);
 
   // we need to map the language for facebook...
   if (isset($settings['services']['facebook']['language'])) {
-    $settings['services']['facebook']['language'] = (_secureshare_language_mapper($settings['services']['facebook']['language'])) ?
+    $settings['services']['facebook']['language'] =
+      (_secureshare_language_mapper($settings['services']['facebook']['language'])) ?
       _secureshare_language_mapper($settings['services']['facebook']['language']) :
       $settings['services']['facebook']['language'];
   }
@@ -111,7 +108,6 @@ function secureshare_pre_render_element($element) {
   );
 
   $element['#secureshare_processed'] = TRUE;
-
   return $element;
 }
 
