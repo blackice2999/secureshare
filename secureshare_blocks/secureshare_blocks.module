@@ -8,7 +8,7 @@
 function secureshare_blocks_block_info() {
   $blocks = array();
 
-  $blocks['secureshare_overall'] = array(
+  $blocks['secureshare_block'] = array(
     'info' => t('Socialshare privacy'),
   );
 
@@ -23,7 +23,7 @@ function secureshare_blocks_block_info() {
  */
 function secureshare_blocks_block_configure($delta = '') {
   $form = array();
-  if ($delta === 'secureshare_overall') {
+  if ($delta === 'secureshare_block') {
     // include the admin forms from core module and proceed if success
     if (module_load_include('inc', 'secureshare', 'secureshare.admin')) {
       // merge in admin form
@@ -36,6 +36,17 @@ function secureshare_blocks_block_configure($delta = '') {
 }
 
 /**
+ * Implementation of hook_block_save()
+ * @param string $delta
+ * @param array $edit
+ */
+function secureshare_blocks_block_save($delta = '', $edit = array()) {
+  if ($delta === 'secureshare_block') {
+
+  }
+}
+
+/**
  * Implementation of hook_block_view
  * @param string $delta
  * @return array
@@ -44,7 +55,7 @@ function secureshare_blocks_block_view($delta = '') {
   $block = array();
 
   switch ($delta) {
-    case 'secureshare_overall':
+    case 'secureshare_block':
       $block['subject'] = t('Secureshare overall block');
       $block['content'] = array(
         'securesharelement' => array(
