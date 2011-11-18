@@ -10,7 +10,7 @@
  * Deletes all settings for secureshare_blocks from the system variable table
  */
 function secureshare_blocks_uninstall() {
-views_embed_view()
+
   // Get ALL secureshare_blocks_variables
   $results = db_select('variable', 'v')
     ->fields('v', array('name'))

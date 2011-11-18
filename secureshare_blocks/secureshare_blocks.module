@@ -3,6 +3,7 @@
 /**
  * Implementation of hook_block_info()
  * provides a Socialshare privacy as block
+ *
  * @return array
  */
 function secureshare_blocks_block_info() {
@@ -18,6 +19,7 @@ function secureshare_blocks_block_info() {
 /**
  * Implementation of hook_block_configure()
  * provides block settings for Socialshare privacy.
+ *
  * @param string $delta
  * @return array
  */
@@ -37,6 +39,7 @@ function secureshare_blocks_block_configure($delta = '') {
 
 /**
  * Implementation of hook_block_save()
+ *
  * @param string $delta
  * @param array $edit
  */
@@ -51,6 +54,7 @@ function secureshare_blocks_block_save($delta = '', $edit = array()) {
 
 /**
  * Implementation of hook_block_view
+ *
  * @param string $delta
  * @return array
  */
@@ -60,12 +64,7 @@ function secureshare_blocks_block_view($delta = '') {
   switch ($delta) {
     case 'default':
       $block['subject'] = t('Secureshare block');
-      $block['content'] = array(
-        'securesharelement' => array(
-          '#type' => 'secureshare',
-          '#secureshare_options' => array(),
-        ),
-      );
+      $block['content'] = secureshare_blocks_block_default();
     break;
   }
 
@@ -73,8 +72,28 @@ function secureshare_blocks_block_view($delta = '') {
 }
 
 /**
+ * Implementation of hook_block_view > delta > default
+ *
+ * @return array
+ *  returns the block elements as render elements
+ */
+function secureshare_blocks_block_default() {
+  $output = array();
+
+  $block_settings = variable_get('secureshare_blocks_default', array());
+
+  $output['secureshare'] = array(
+    '#type' => 'secureshare',
+    '#secureshare_config' => $block_settings,
+  );
+
+  return $output;
+}
+
+/**
  * Helper function iterates over the settings array and removes empty values.
  * because we dont need to save any empty keys
+ *
  * @param array $settings
  */
 function _secureshare_blocks_sanitize_values(&$settings = array()) {
