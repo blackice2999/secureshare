@@ -24,12 +24,13 @@ function secureshare_blocks_block_info() {
 function secureshare_blocks_block_configure($delta = '') {
   $form = array();
   if ($delta === 'secureshare_overall') {
+    // include the admin forms from core module and proceed if success
+    if (module_load_include('inc', 'secureshare', 'secureshare.admin')) {
+      // merge in admin form
+      $form += secureshare_settings_form();
 
-    $form['secureshare_block_settings'] = array(
-      '#type'  => 'fieldset',
-      '#tree' => TRUE,
-    );
-
+      //@TODO: we need to merge in the default values
+    };
   }
   return $form;
 }
