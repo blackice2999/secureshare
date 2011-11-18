@@ -42,7 +42,10 @@ function secureshare_blocks_block_configure($delta = '') {
  */
 function secureshare_blocks_block_save($delta = '', $edit = array()) {
   if ($delta === 'default') {
-    dpm($edit);
+    $settings = $edit['secureshare_settings'];
+    // remove empty values
+    $settings = _secureshare_blocks_sanitize_values($settings);
+    variable_set('secureshare_blocks_' . $delta, $settings);
   }
 }
 
@@ -67,4 +70,21 @@ function secureshare_blocks_block_view($delta = '') {
   }
 
   return $block;
+}
+
+/**
+ * Helper function iterates over the settings array and removes empty values.
+ * because we dont need to save any empty keys
+ * @param array $settings
+ */
+function _secureshare_blocks_sanitize_values(&$settings = array()) {
+  foreach($settings as $setting_key => $value) {
+    if (is_array($value)) {
+      _secureshare_blocks_sanitize_values($settings[$setting_key]);
+    }
+    elseif (empty($value)) {
+      unset($settings[$setting_key]);
+    }
+  }
+ return $settings;
 }
