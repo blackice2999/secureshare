@@ -4,3 +4,7 @@ core = 7.x
 configure = admin/config/secureshare
 package = "Secureshare"
 dependencies[] = libraries
+
+files[] = secureshare.module
+files[] = secureshare.admin.inc
+files[] = secureshare.theme.inc
