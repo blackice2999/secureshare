@@ -252,3 +252,26 @@ function secureshare_settings_form()
 
   return $form;
 }
+
+/**
+ * Helper function!: Maps and merge the settings array into form element default values
+ * @param $element
+ * @param array $settings
+ */
+function _secureshare_merge_form_defaults(&$element, $settings = array()) {
+  $children = element_children($element, TRUE);
+
+  foreach ($children as $child_key) {
+    // is the child a element and we have a settings merge in
+    if (isset($element[$child_key]['#type']) && $element[$child_key]['#type'] != 'fieldset' && isset($settings[$child_key])) {
+      $element[$child_key]['#default_value'] = $settings[$child_key];
+    }
+
+    $child_of_child = element_children($element[$child_key], TRUE);
+    if ($child_of_child) {
+      _secureshare_merge_form_defaults($element[$child_key], $settings[$child_key]);
+    }
+  }
+
+  return $element;
+}

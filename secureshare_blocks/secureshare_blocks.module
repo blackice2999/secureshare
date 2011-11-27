@@ -28,10 +28,12 @@ function secureshare_blocks_block_configure($delta = '') {
   if ($delta === 'default') {
     // include the admin forms from core module and proceed if success
     if (module_load_include('inc', 'secureshare', 'secureshare.admin')) {
-      // merge in admin form
+      // merge in admin form without default values
       $form += secureshare_settings_form();
-
-      //@TODO: we need to merge in the default values
+      // load settings from block and merge into settings form
+      $block_settings = variable_get('secureshare_blocks_default', array());
+      // merge settings array into form element #default_values
+      _secureshare_merge_form_defaults($form['secureshare_settings'], $block_settings);
     };
   }
   return $form;
