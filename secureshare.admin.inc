@@ -53,8 +53,11 @@ function secureshare_settings_form()
 
     $form['secureshare_settings']['services']['facebook']['status'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Enabled'),
-      '#description' => t('enable facebook button'),
+      '#title' => t('Disable'),
+      '#description' => t('disable facebook button'),
+      // heise plugin dont use true/false for this... instead using on/off
+      // on is the default behavior... so we disable it here...
+      '#return_value' => 'off',
     );
 
     $form['secureshare_settings']['services']['facebook']['dummy_img'] = array(
@@ -83,8 +86,11 @@ function secureshare_settings_form()
 
     $form['secureshare_settings']['services']['facebook']['perma_option'] = array(
       '#type' => 'checkbox',
-      '#title' => t('perma option'),
-      '#description' => t('Allow permanent activation?'),
+      '#title' => t('disable perma option'),
+      '#description' => t('disable perma option'),
+      // heise plugin dont use true/false for this... instead using on/off
+      // on is the default behavior... so we disable it here...
+      '#return_value' => 'off',
     );
 
     $form['secureshare_settings']['services']['facebook']['display_name'] = array(
@@ -125,8 +131,11 @@ function secureshare_settings_form()
 
   $form['secureshare_settings']['services']['twitter']['status'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enabled'),
-    '#description' => t('enable twitter button'),
+    '#title' => t('Disable'),
+    '#description' => t('disable twitter button'),
+    // heise plugin dont use true/false for this... instead using on/off
+    // on is the default behavior... so we disable it here...
+    '#return_value' => 'off',
   );
 
   $form['secureshare_settings']['services']['twitter']['dummy_img'] = array(
@@ -155,8 +164,11 @@ function secureshare_settings_form()
 
   $form['secureshare_settings']['services']['twitter']['perma_option'] = array(
     '#type' => 'checkbox',
-    '#title' => t('perma option'),
-    '#description' => t('Allow permanent activation?'),
+    '#title' => t('disable perma option'),
+    '#description' => t('disable permanent activation?'),
+    // heise plugin dont use true/false for this... instead using on/off
+    // on is the default behavior... so we disable it here...
+    '#return_value' => 'off',
   );
 
   $form['secureshare_settings']['services']['twitter']['display_name'] = array(
@@ -197,8 +209,11 @@ function secureshare_settings_form()
 // ---
   $form['secureshare_settings']['services']['gplus']['status'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enabled'),
-    '#description' => t('enable google+ button'),
+    '#title' => t('disable'),
+    '#description' => t('disable google+ button'),
+    // heise plugin dont use true/false for this... instead using on/off
+    // on is the default behavior... so we disable it here...
+    '#return_value' => 'off',
   );
 
   $form['secureshare_settings']['services']['gplus']['dummy_img'] = array(
@@ -227,8 +242,11 @@ function secureshare_settings_form()
 
   $form['secureshare_settings']['services']['gplus']['perma_option'] = array(
     '#type' => 'checkbox',
-    '#title' => t('perma option'),
-    '#description' => t('Allow permanent activation?'),
+    '#title' => t('disable perma option'),
+    '#description' => t('disable permanent activation?'),
+    // heise plugin dont use true/false for this... instead using on/off
+    // on is the default behavior... so we disable it here...
+    '#return_value' => 'off',
   );
 
   $form['secureshare_settings']['services']['gplus']['display_name'] = array(
