@@ -68,7 +68,7 @@ function secureshare_fields_form_alter(&$form, &$form_state, $form_id) {
       '#title' => t('Profile'),
       '#empty_value' => '',
       '#options' => $options,
-      '#default_value' => variable_get("secureshare_fields_node_{$form['#node_type']->type}", 'default'),
+      '#default_value' => variable_get("secureshare_fields_node_{$form['#node_type']->type}", ''),
     );
 
     $form['#submit'][] = 'secureshare_fields_node_type_form_submit';
