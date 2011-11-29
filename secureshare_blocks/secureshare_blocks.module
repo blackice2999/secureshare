@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * provides the secureshare implementation as a block
+ */
 
 /**
  * Implementation of hook_block_info()
@@ -11,6 +15,7 @@ function secureshare_blocks_block_info() {
 
   $blocks['default'] = array(
     'info' => t('Socialshare privacy'),
+    'cache' => DRUPAL_NO_CACHE,
   );
 
   return $blocks;
@@ -25,17 +30,23 @@ function secureshare_blocks_block_info() {
  */
 function secureshare_blocks_block_configure($delta = '') {
   $form = array();
-  if ($delta === 'default') {
-    // include the admin forms from core module and proceed if success
-    if (module_load_include('inc', 'secureshare', 'secureshare.admin')) {
-      // merge in admin form without default values
-      $form += secureshare_settings_form();
-      // load settings from block and merge into settings form
-      $block_settings = variable_get('secureshare_blocks_default', array());
-      // merge settings array into form element #default_values
-      _secureshare_merge_form_defaults($form['secureshare_settings'], $block_settings);
-    };
+
+  $options = array();
+  ctools_include('export');
+  foreach (ctools_export_crud_load_all('secureshare_profiles') as $profile) {
+    if (empty($profile->disabled)) {
+      $options[$profile->name] = $profile->name;
+    }
   }
+
+  $form['secureshare_profile'] = array(
+    '#type' => 'select',
+    '#title' => t('Secureshare settings profile'),
+    '#empty_value' => '',
+    '#default_value' => variable_get('secureshare_blocks_' . $delta, 'default'),
+    '#options' => ($options) ? $options : array(),
+  );
+
   return $form;
 }
 
@@ -46,12 +57,7 @@ function secureshare_blocks_block_configure($delta = '') {
  * @param array $edit
  */
 function secureshare_blocks_block_save($delta = '', $edit = array()) {
-  if ($delta === 'default') {
-    $settings = $edit['secureshare_settings'];
-    // remove empty values
-    $settings = _secureshare_blocks_sanitize_values($settings);
-    variable_set('secureshare_blocks_' . $delta, $settings);
-  }
+  variable_set('secureshare_blocks_' . $delta, $edit['secureshare_profile']);
 }
 
 /**
@@ -61,16 +67,9 @@ function secureshare_blocks_block_save($delta = '', $edit = array()) {
  * @return array
  */
 function secureshare_blocks_block_view($delta = '') {
-  $block = array();
-
-  switch ($delta) {
-    case 'default':
-      $block['subject'] = t('Secureshare block');
-      $block['content'] = secureshare_blocks_block_default();
-    break;
+  if (function_exists($function = 'secureshare_blocks_block_' . $delta . '_view')) {
+    return $function();
   }
-
-  return $block;
 }
 
 /**
@@ -79,33 +78,21 @@ function secureshare_blocks_block_view($delta = '') {
  * @return array
  *  returns the block elements as render elements
  */
-function secureshare_blocks_block_default() {
+function secureshare_blocks_block_default_view() {
   $output = array();
+  $profile = variable_get('secureshare_blocks_default', 'default');
 
-  $block_settings = variable_get('secureshare_blocks_default', array());
-
-  $output['secureshare'] = array(
-    '#type' => 'secureshare',
-    '#secureshare_config' => $block_settings,
-  );
+  if (!empty($profile)) {
+    return array(
+      'subject' => t('Secureshare'),
+      'content' => array(
+        'secureshare' => array(
+          '#type' => 'secureshare',
+          '#secureshare_profile' => $profile,
+        ),
+      ),
+    );
+  }
 
   return $output;
-}
-
-/**
- * Helper function iterates over the settings array and removes empty values.
- * because we dont need to save any empty keys
- *
- * @param array $settings
- */
-function _secureshare_blocks_sanitize_values(&$settings = array()) {
-  foreach($settings as $setting_key => $value) {
-    if (is_array($value)) {
-      _secureshare_blocks_sanitize_values($settings[$setting_key]);
-    }
-    elseif (empty($value)) {
-      unset($settings[$setting_key]);
-    }
-  }
- return $settings;
 }
