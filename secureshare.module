@@ -216,8 +216,6 @@ function secureshare_pre_render_element($element) {
     'data' => array('secureshare' => array($element['#id'] => $settings)),
   );
 
-  dpm($settings);
-
   $element['#secureshare_processed'] = TRUE;
   return $element;
 }
