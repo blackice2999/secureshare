@@ -4,6 +4,14 @@
  * Adds Sharebuttons from Facebook, Google+ and Twitter to each selected node type and make it active after confirm from user.
  */
 
+function secureshare_hook() {
+  return array(
+    'help' => array(
+      'group' => 'help',
+    ),
+  );
+}
+
 function secureshare_ctools_plugin_api() {
   list($module, $api) = func_get_args();
   if ($module == 'secureshare' && $api == 'default_secureshare_profiles') {
@@ -25,21 +33,6 @@ function secureshare_default_secureshare_profile() {
   $export['default'] = $profile;
 
   return $export;
-}
-/**
- * Implementation of hook_help()
- *
- * @param $path
- * @param $arg
- * @return string
- */
-function secureshare_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help/#secureshare':
-      return '<p>' . t('#todo help...') . '</p>';
-      break;
-  }
-
 }
 
 /**
