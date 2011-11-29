@@ -88,6 +88,12 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Imagepath'),
     '#description' => t('path to the displayed image'),
     '#default_value' => isset($config['facebook']['dummy_img']) ? $config['facebook']['dummy_img'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
+
   );
 
   $form['config']['services']['facebook']['txt_info'] = array(
@@ -95,6 +101,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('MouseOver button text'),
     '#description' => t('MouseOver button text'),
     '#default_value' => isset($config['facebook']['txt_info']) ? $config['facebook']['txt_info'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['facebook']['txt_fb_off'] = array(
@@ -102,6 +113,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Image text off'),
     '#description' => t('alternative text for the image button on off mode'),
     '#default_value' => isset($config['facebook']['txt_fb_off']) ? $config['facebook']['txt_fb_off'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['facebook']['txt_fb_on'] = array(
@@ -109,6 +125,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Image text on'),
     '#description' => t('alternative text for the image button in on mode'),
     '#default_value' => isset($config['facebook']['txt_fb_on']) ? $config['facebook']['txt_fb_on'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['facebook']['perma_option'] = array(
@@ -119,6 +140,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     // on is the default behavior... so we disable it here...
     '#return_value' => 'off',
     '#default_value' => isset($config['facebook']['perma_option']) ? $config['facebook']['perma_option'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['facebook']['display_name'] = array(
@@ -126,6 +152,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Display name'),
     '#description' => t('Name of the displayed social network.'),
     '#default_value' => isset($config['facebook']['display_name']) ? $config['facebook']['display_name'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   // @TODO: need to be implemented
@@ -138,8 +169,27 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#options' => array(
       'user' => t('Users current language'),
       'system' => t('Default language'),
+      'static' => t('static language value'),
     ),
     '#default_value' => isset($config['facebook']['language']) ? $config['facebook']['language'] : 'system',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $form['config']['services']['facebook']['language_static'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Language code'),
+    '#description' => t('Use this code instead of autodetect. On facebook you need to use format like: en_US or de_DE'),
+    '#default_value' => isset($config['facebook']['language_static']) ? $config['facebook']['language_static'] : '',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="config[services][facebook][language]"]' => array('value' => 'static'),
+      ),
+    ),
+
   );
 
   $form['config']['services']['facebook']['action'] = array(
@@ -150,6 +200,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
       'like' => t('like'),
     ),
     '#default_value' => isset($config['facebook']['action']) ? $config['facebook']['action'] : 'like',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][facebook][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['twitter'] = array(
@@ -174,6 +229,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Imagepath'),
     '#description' => t('path to the displayed image'),
     '#default_value' => isset($config['twitter']['dummy_img']) ? $config['twitter']['dummy_img'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['twitter']['txt_info'] = array(
@@ -181,6 +241,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('MouseOver button text'),
     '#description' => t('MouseOver button text'),
     '#default_value' => isset($config['twitter']['txt_info']) ? $config['twitter']['txt_info'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['twitter']['txt_twitter_off'] = array(
@@ -188,6 +253,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Image text off'),
     '#description' => t('alternative text for the image button on off mode'),
     '#default_value' => isset($config['twitter']['txt_twitter_off']) ? $config['twitter']['txt_twitter_off'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['twitter']['txt_twitter_on'] = array(
@@ -195,6 +265,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Image text on'),
     '#description' => t('alternative text for the image button in on mode'),
     '#default_value' => isset($config['twitter']['txt_twitter_on']) ? $config['twitter']['txt_twitter_on'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['twitter']['perma_option'] = array(
@@ -205,6 +280,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     // on is the default behavior... so we disable it here...
     '#return_value' => 'off',
     '#default_value' => isset($config['twitter']['perma_option']) ? $config['twitter']['perma_option'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['twitter']['display_name'] = array(
@@ -212,6 +292,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Display name'),
     '#description' => t('Name of the displayed social network.'),
     '#default_value' => isset($config['twitter']['display_name']) ? $config['twitter']['display_name'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   // @TODO: need to be implemented
@@ -225,6 +310,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
       'default' => t('Use script default'),
     ),
     '#default_value' => isset($config['twitter']['tweet_text']) ? $config['twitter']['tweet_text'] : 'default',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['twitter']['language'] = array(
@@ -236,6 +326,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
       'system' => t('System default language'),
     ),
     '#default_value' => isset($config['twitter']['language']) ? $config['twitter']['language'] : 'system',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][twitter][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['gplus'] = array(
@@ -260,6 +355,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Imagepath'),
     '#description' => t('path to the displayed image'),
     '#default_value' => isset($config['gplus']['dummy_img']) ? $config['gplus']['dummy_img'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][gplus][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['gplus']['txt_info'] = array(
@@ -267,6 +367,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('MouseOver button text'),
     '#description' => t('MouseOver button text'),
     '#default_value' => isset($config['gplus']['txt_info']) ? $config['gplus']['txt_info'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][gplus][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['gplus']['txt_gplus_off'] = array(
@@ -274,6 +379,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Image text off'),
     '#description' => t('alternative text for the image button on off mode'),
     '#default_value' => isset($config['gplus']['txt_gplus_off']) ? $config['gplus']['txt_gplus_off'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][gplus][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['gplus']['txt_gplus_on'] = array(
@@ -281,6 +391,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Image text on'),
     '#description' => t('alternative text for the image button in on mode'),
     '#default_value' => isset($config['gplus']['txt_gplus_on']) ? $config['gplus']['txt_gplus_on'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][gplus][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['gplus']['perma_option'] = array(
@@ -291,6 +406,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     // on is the default behavior... so we disable it here...
     '#return_value' => 'off',
     '#default_value' => isset($config['gplus']['perma_option']) ? $config['gplus']['perma_option'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][gplus][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['config']['services']['gplus']['display_name'] = array(
@@ -298,6 +418,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
     '#title' => t('Display name'),
     '#description' => t('Name of the displayed social network.'),
     '#default_value' => isset($config['gplus']['display_name']) ? $config['gplus']['display_name'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][gplus][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   // @TODO: need to be implemented
@@ -312,6 +437,11 @@ function secureshare_profiles_export_ui_form(&$form, &$form_state) {
       'system' => t('Default language'),
     ),
     '#default_value' => isset($config['gplus']['language']) ? $config['gplus']['language'] : '',
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="config[services][gplus][status]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 }
 
