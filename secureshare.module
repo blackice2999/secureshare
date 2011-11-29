@@ -4,6 +4,28 @@
  * Adds Sharebuttons from Facebook, Google+ and Twitter to each selected node type and make it active after confirm from user.
  */
 
+function secureshare_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == 'secureshare' && $api == 'default_secureshare_profiles') {
+    return array('version' => 2);
+  }
+}
+
+/**
+ * Implementation of hook_default_sexybookmarks_profile().
+ */
+function secureshare_default_secureshare_profile() {
+  $export = array();
+
+  $profile = new stdClass;
+  $profile->disabled = FALSE; /* Edit this to true to make a default profile disabled initially */
+  $profile->api_version = 2;
+  $profile->name = 'default';
+  $profile->config = array(); // @TODO: we need default settings here
+  $export['default'] = $profile;
+
+  return $export;
+}
 /**
  * Implementation of hook_help()
  *
@@ -14,10 +36,22 @@
 function secureshare_help($path, $arg) {
   switch ($path) {
     case 'admin/help/#secureshare':
-      return '<p>'. t('#todo help...') .'</p>';
-    break;
+      return '<p>' . t('#todo help...') . '</p>';
+      break;
   }
 
+}
+
+/**
+ * Implements hook_permission().
+ */
+function secureshare_permission() {
+  return array(
+    'administer secureshare' => array(
+      'title' => t('Administer Secureshare'),
+      'description' => t('Manage Secureshare settings profiles.'),
+    ),
+  );
 }
 
 /**
@@ -85,7 +119,8 @@ function secureshare_pre_render_element($element) {
     // need to be blank, because heise plugin script try to load a css file...
     'css_path' => '',
     // we need to set the path to images of the library new
-    'services' => array());
+    'services' => array()
+  );
 
   // ensure providers exists
   $settings['services'] += array('facebook' => array(), 'twitter' => array(), 'gplus' => array());
@@ -98,8 +133,8 @@ function secureshare_pre_render_element($element) {
   if (isset($settings['services']['facebook']['language'])) {
     $settings['services']['facebook']['language'] =
       (_secureshare_language_mapper($settings['services']['facebook']['language'])) ?
-      _secureshare_language_mapper($settings['services']['facebook']['language']) :
-      $settings['services']['facebook']['language'];
+        _secureshare_language_mapper($settings['services']['facebook']['language']) :
+        $settings['services']['facebook']['language'];
   }
 
   $element['#attached']['js'][] = array(
@@ -137,6 +172,24 @@ function secureshare_library() {
   );
 
   return $libraries;
+}
+
+/**
+ * Prepare and returns the configuration from specific profile.
+ * @param string $profile
+ * @return array
+ */
+function secureshare_get_config($profile = 'default') {
+  $config = array();
+
+  ctools_include('export');
+  if (($profile = ctools_export_crud_load('secureshare_profiles', $profile))) {
+    $config = $profile->config;
+  }
+
+  // give other modules the chance to change the settings
+  drupal_alter('secureshare_config', $config, $profile);
+  return $config;
 }
 
 /**
