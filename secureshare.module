@@ -4,6 +4,9 @@
  * Adds Sharebuttons from Facebook, Google+ and Twitter to each selected node type and make it active after confirm from user.
  */
 
+// include additional files
+require_once (dirname(__FILE__).'/includes/secureshare.helper.inc');
+
 function secureshare_hook() {
   return array(
     'help' => array(
@@ -20,6 +23,15 @@ function secureshare_ctools_plugin_api() {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function secureshare_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && !empty($plugin)) {
+    return "plugins/{$plugin}";
+  }
+}
+
+/**
  * Implementation of hook_default_sexybookmarks_profile().
  */
 function secureshare_default_secureshare_profile() {
@@ -29,7 +41,48 @@ function secureshare_default_secureshare_profile() {
   $profile->disabled = FALSE; /* Edit this to true to make a default profile disabled initially */
   $profile->api_version = 2;
   $profile->name = 'default';
-  $profile->config = array(); // @TODO: we need default settings here
+  $profile->config = array(
+    'css_path' => '',
+    'info_link' => '',
+    'txt_help' => '',
+    'settings_perma' => '',
+    'cookie_expires' => '365',
+    'services' => array(
+      'facebook' => array(
+        'status' => 0,
+        'dummy_img' => '',
+        'txt_info' => '',
+        'txt_fb_off' => '',
+        'txt_fb_on' => '',
+        'perma_option' => 0,
+        'display_name' => '',
+        'language' => 'system',
+        'action' => 'like',
+      ),
+      'twitter' => array(
+        'status' => 0,
+        'dummy_img' => '',
+        'txt_info' => '',
+        'txt_twitter_off' => '',
+        'txt_twitter_on' => '',
+        'perma_option' => 0,
+        'display_name' => '',
+        'tweet_text' => 'default',
+        'language' => 'system',
+      ),
+      'gplus' => array(
+        'status' => 0,
+        'dummy_img' => '',
+        'txt_info' => '',
+        'txt_gplus_off' => '',
+        'txt_gplus_on' => '',
+        'perma_option' => 0,
+        'display_name' => '',
+        'language' => 'user',
+      ),
+    ),
+  );
+
   $export['default'] = $profile;
 
   return $export;
@@ -65,6 +118,11 @@ function secureshare_theme() {
 
 /**
  * Implementation of hook_element_info()
+ * set #secureshare_profile to use a settings profile
+ * set #secureshare_config to overrite some settings from profile in runtime
+ * alternativly you can use _secureshare_profile_alter to manipulate settings
+ *
+ * @return array
  */
 function secureshare_element_info() {
   $elements = array();
@@ -74,6 +132,7 @@ function secureshare_element_info() {
     '#theme_wrappers' => array('secureshare_element'),
     '#pre_render' => array('secureshare_pre_render_element'),
     '#secureshare_config' => array(),
+    '#secureshare_profile' => 'default',
     '#attached' => array(
       'library' => array(
         array('secureshare', 'socialshareprivacy'),
@@ -105,8 +164,19 @@ function secureshare_pre_render_element($element) {
     $element['#id'] = drupal_html_id('secureshare');
   }
 
-  // assign settings to js
-  $settings = $element['#secureshare_config'];
+  $profile = array();
+  // get settings from profile only if not set to none or is empty (for manual usages)
+  if ($element['#secureshare_profile'] != 'none' || empty($element['#secureshare_profile'])) {
+    $profile = secureshare_get_config($element['#secureshare_profile']);
+  }
+
+  // if we got config directly submitted merge into profile settings with overwriting.
+  $settings = array_merge_recursive($profile, $element['#secureshare_config']);
+
+  // sanitize settings by removing empty values because heise plugin has it own default values
+  // and it dont make any sense to copy and duplicate them into drupal.
+  $settings = _secureshare_sanitize_values($settings);
+
   // assign minimal default settings
   $settings += array(
     // need to be blank, because heise plugin script try to load a css file...
@@ -118,9 +188,20 @@ function secureshare_pre_render_element($element) {
   // ensure providers exists
   $settings['services'] += array('facebook' => array(), 'twitter' => array(), 'gplus' => array());
   // merge in the default images from library
-  $settings['services']['facebook'] += array('dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png',);
-  $settings['services']['twitter'] += array('dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png',);
-  $settings['services']['gplus'] += array('dummy_img' => base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png',);
+  $settings['services']['facebook']['dummy_img'] =
+    empty($settings['services']['facebook']['dummy_img']) ?
+    base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png' :
+    $settings['services']['facebook']['dummy_img'];
+
+  $settings['services']['twitter']['dummy_img'] =
+    empty($settings['services']['twitter']['dummy_img']) ?
+    base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png' :
+    $settings['services']['twitter']['dummy_img'];
+
+  $settings['services']['gplus']['dummy_img'] =
+    empty($settings['services']['gplus']['dummy_img']) ?
+    base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png' :
+    $settings['services']['gplus']['dummy_img'];
 
   // we need to map the language for facebook...
   if (isset($settings['services']['facebook']['language'])) {
@@ -177,7 +258,15 @@ function secureshare_get_config($profile = 'default') {
 
   ctools_include('export');
   if (($profile = ctools_export_crud_load('secureshare_profiles', $profile))) {
-    $config = $profile->config;
+    if (empty($profile->disabled)) {
+      $config = $profile->config;
+    }
+    else {
+      watchdog('secureshare', 'Provided profile is disabled (!profile).', array('!profile' => $profile), WATCHDOG_ERROR);
+    }
+  }
+  else {
+    watchdog('secureshare', 'Invalid profile was provided (!profile).', array('!profile' => $profile), WATCHDOG_ERROR);
   }
 
   // give other modules the chance to change the settings
@@ -185,111 +274,3 @@ function secureshare_get_config($profile = 'default') {
   return $config;
 }
 
-/**
- * Helper method to map the drupal language shortcode to locale code...
- * @param null $lang
- * @return string
- */
-function _secureshare_language_mapper($lang = NULL) {
-  $languages = array(
-    'af' => 'af_ZA',
-    'ar' => 'ar_AR',
-    'ay' => 'ay_BO',
-    'az' => 'az_AZ',
-    'be' => 'be_BY',
-    'bg' => 'bg_BG',
-    'bn' => 'bn_IN',
-    'bs' => 'bs_BA',
-    'ca' => 'ca_ES',
-    'ck' => 'ck_US',
-    'cs' => 'cs_CZ',
-    'cy' => 'cy_GB',
-    'da' => 'da_DK',
-    'de' => 'de_DE',
-    'el' => 'el_GR',
-    'en' => 'en_US',
-    'eo' => 'eo_EO',
-    'es' => 'es_ES',
-    'et' => 'et_EE',
-    'eu' => 'eu_ES',
-    'fa' => 'fa_IR',
-    'fb' => 'fb_FI',
-    'fb' => 'fb_LT',
-    'fi' => 'fi_FI',
-    'fo' => 'fo_FO',
-    'fr' => 'fr_CA',
-    'fr' => 'fr_FR',
-    'ga' => 'ga_IE',
-    'gl' => 'gl_ES',
-    'gn' => 'gn_PY',
-    'gu' => 'gu_IN',
-    'he' => 'he_IL',
-    'hi' => 'hi_IN',
-    'hr' => 'hr_HR',
-    'hu' => 'hu_HU',
-    'hy' => 'hy_AM',
-    'id' => 'id_ID',
-    'is' => 'is_IS',
-    'it' => 'it_IT',
-    'ja' => 'ja_JP',
-    'jv' => 'jv_ID',
-    'ka' => 'ka_GE',
-    'kk' => 'kk_KZ',
-    'km' => 'km_KH',
-    'kn' => 'kn_IN',
-    'ko' => 'ko_KR',
-    'ku' => 'ku_TR',
-    'la' => 'la_VA',
-    'li' => 'li_NL',
-    'lt' => 'lt_LT',
-    'lv' => 'lv_LV',
-    'mg' => 'mg_MG',
-    'mk' => 'mk_MK',
-    'ml' => 'ml_IN',
-    'mn' => 'mn_MN',
-    'mr' => 'mr_IN',
-    'ms' => 'ms_MY',
-    'mt' => 'mt_MT',
-    'nb' => 'nb_NO',
-    'ne' => 'ne_NP',
-    'nl' => 'nl_BE',
-    'nl' => 'nl_NL',
-    'nn' => 'nn_NO',
-    'pa' => 'pa_IN',
-    'pl' => 'pl_PL',
-    'ps' => 'ps_AF',
-    'pt' => 'pt_PT',
-    'qu' => 'qu_PE',
-    'rm' => 'rm_CH',
-    'ro' => 'ro_RO',
-    'ru' => 'ru_RU',
-    'sa' => 'sa_IN',
-    'se' => 'se_NO',
-    'sk' => 'sk_SK',
-    'sl' => 'sl_SI',
-    'so' => 'so_SO',
-    'sq' => 'sq_AL',
-    'sr' => 'sr_RS',
-    'sv' => 'sv_SE',
-    'sw' => 'sw_KE',
-    'sy' => 'sy_SY',
-    'ta' => 'ta_IN',
-    'te' => 'te_IN',
-    'tg' => 'tg_TJ',
-    'th' => 'th_TH',
-    'tl' => 'tl_PH',
-    'tl' => 'tl_ST',
-    'tr' => 'tr_TR',
-    'tt' => 'tt_RU',
-    'uk' => 'uk_UA',
-    'ur' => 'ur_PK',
-    'uz' => 'uz_UZ',
-    'vi' => 'vi_VN',
-    'xh' => 'xh_ZA',
-    'yi' => 'yi_DE',
-    'zh' => 'zh_CN',
-    'zu' => 'zu_ZA',
-  );
-
-  return (isset($languages[$lang])) ? $languages[$lang] : 'en_US';
-}

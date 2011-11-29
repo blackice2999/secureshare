@@ -44,3 +44,35 @@ function secureshare_schema() {
 
   return $schema;
 }
+
+/**
+ * Creates the Secureshare settings profile table if missing...
+ */
+function secureshare_update_7200(&$sandbox) {
+  if (!db_table_exists('secureshare_profiles')) {
+    db_create_table('secureshare_profiles', array(
+      'fields' => array(
+        'name' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => '', // @TODO
+        ),
+        'config' => array(
+          'type' => 'text',
+          'size' => 'medium',
+          'not null' => TRUE,
+          'serialize' => TRUE,
+          'description' => '', // @TODO
+        ),
+      ),
+      'unique keys' => array(
+        'name' => array('name')
+      ),
+      'primary key' => array('name'),
+    ));
+
+    return t('Added Secureshare settings profile table.');
+  }
+}
