@@ -5,7 +5,11 @@
  */
 
 // include additional files
-require_once (dirname(__FILE__).'/includes/secureshare.helper.inc');
+require_once (dirname(__FILE__) . '/includes/secureshare.helper.inc');
+
+DEFINE('SECURESHARE_LANGUAGE_SYSTEM', 'system');
+DEFINE('SECURESHARE_LANGUAGE_USER', 'user');
+DEFINE('SECURESHARE_LANGUAGE_STATIC', 'static');
 
 function secureshare_hook() {
   return array(
@@ -190,26 +194,18 @@ function secureshare_pre_render_element($element) {
   // merge in the default images from library
   $settings['services']['facebook']['dummy_img'] =
     empty($settings['services']['facebook']['dummy_img']) ?
-    base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png' :
-    $settings['services']['facebook']['dummy_img'];
+      base_path() . $library_path . '/socialshareprivacy/images/dummy_facebook.png' :
+      $settings['services']['facebook']['dummy_img'];
 
   $settings['services']['twitter']['dummy_img'] =
     empty($settings['services']['twitter']['dummy_img']) ?
-    base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png' :
-    $settings['services']['twitter']['dummy_img'];
+      base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png' :
+      $settings['services']['twitter']['dummy_img'];
 
   $settings['services']['gplus']['dummy_img'] =
     empty($settings['services']['gplus']['dummy_img']) ?
-    base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png' :
-    $settings['services']['gplus']['dummy_img'];
-
-  // we need to map the language for facebook...
-  if (isset($settings['services']['facebook']['language'])) {
-    $settings['services']['facebook']['language'] =
-      (_secureshare_language_mapper($settings['services']['facebook']['language'])) ?
-        _secureshare_language_mapper($settings['services']['facebook']['language']) :
-        $settings['services']['facebook']['language'];
-  }
+      base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png' :
+      $settings['services']['gplus']['dummy_img'];
 
   $element['#attached']['js'][] = array(
     'type' => 'setting',
@@ -254,6 +250,7 @@ function secureshare_library() {
  * @return array
  */
 function secureshare_get_config($profile = 'default') {
+
   $config = array();
 
   ctools_include('export');
@@ -272,4 +269,38 @@ function secureshare_get_config($profile = 'default') {
   // give other modules the chance to change the settings
   drupal_alter('secureshare_config', $config, $profile);
   return $config;
+}
+
+/**
+ * Implements hook_secureshare_config_alter()
+ * used to alter own configuration for special handling on some parameters
+ * @param $config
+ * @param $profile
+ */
+function secureshare_secureshare_config_alter(&$config, $profile) {
+  global $language;
+  // convert language settings in a real language
+  $language_mapping = array('facebook', 'twitter', 'gplus');
+  foreach($language_mapping as $language_map) {
+    if (isset($config['services'][$language_map]['language'])) {
+      if ($config['services'][$language_map]['language'] === SECURESHARE_LANGUAGE_SYSTEM) {
+        $config['services'][$language_map]['language'] = language_default('language');
+      }
+      elseif($config['services'][$language_map]['language'] === SECURESHARE_LANGUAGE_USER) {
+        $config['services'][$language_map]['language'] = $language->language;
+      }
+      elseif($config['services'][$language_map]['language'] === SECURESHARE_LANGUAGE_STATIC && isset($config['services'][$language_map]['language_static'])) {
+        $config['services'][$language_map]['language'] = $config['services'][$language_map]['language_static'];
+        unset($config['services'][$language_map]['language_static']);
+      }
+    }
+  }
+
+  // special case for facebook... we need to map the language de -> de_DE
+  if (isset($config['services']['facebook']['language'])) {
+  $config['services']['facebook']['language'] =
+    (_secureshare_language_mapper($config['services']['facebook']['language'])) ?
+      _secureshare_language_mapper($config['services']['facebook']['language']) :
+      $config['services']['facebook']['language'];
+  }
 }
