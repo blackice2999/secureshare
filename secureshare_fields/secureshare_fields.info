@@ -1,0 +1,5 @@
+name = Secure Sharebuttons - Fields
+description = Provides entity field implementation for secureshare module.
+core = 7.x
+package = "Secureshare"
+dependencies[] = secureshare
