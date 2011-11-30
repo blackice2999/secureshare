@@ -1,9 +1,10 @@
 name = Secure Sharebuttons - Core
 description = provides the Socialshare core functionality used by other modules.
 core = 7.x
-configure = admin/config/secureshare
+configure = admin/config/content/secureshare
 package = "Secureshare"
 dependencies[] = libraries
+dependencies[] = ctools
 
 files[] = secureshare.module
 files[] = secureshare.admin.inc
