@@ -1,9 +1,9 @@
-<h2>Secureshare / Social Share Privacy</h2>
+## Secureshare / Social Share Privacy
 
 provides a implementation of the 2-click-solution from heise.de ( http://www.heise.de/ct/artikel/2-Klicks-fuer-mehr-Datenschutz-1333879.html )
 for more privacy against Facebook, Twitter and Google+. This module implement the heise-jquery-code using libraries.
 
-<h3>Installation:</h3>
+### Installation:
 
 <ol>
   <li>Download the jquery-code from http://www.heise.de/extras/socialshareprivacy/ , extract it and put it in your libraries folder Example: sites/all/libraries/  > sites/all/libraries/secureshare</li>
