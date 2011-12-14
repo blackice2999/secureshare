@@ -199,12 +199,12 @@ function secureshare_pre_render_element($element) {
 
   $settings['services']['twitter']['dummy_img'] =
     empty($settings['services']['twitter']['dummy_img']) ?
-      base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png' :
+      base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png' :
       $settings['services']['twitter']['dummy_img'];
 
   $settings['services']['gplus']['dummy_img'] =
     empty($settings['services']['gplus']['dummy_img']) ?
-      base_path() . $library_path . '/socialshareprivacy/images/dummy_twitter.png' :
+      base_path() . $library_path . '/socialshareprivacy/images/dummy_gplus.png' :
       $settings['services']['gplus']['dummy_img'];
 
   $element['#attached']['js'][] = array(
